@@ -1,0 +1,17 @@
+{
+  "name": "planning-poker-assistance-program",
+  "version": "0.1.0",
+  "description": "Your planning will make more happy!",
+  "main": "bootstrap.ts",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maji-KY/planning-poker-assistance-program.git"
+  },
+  "author": "maji-KY",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "firebase-tools": "^3.14.0"
+  },
+  "dependencies": {}
+}
