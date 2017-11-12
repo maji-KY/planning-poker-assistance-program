@@ -1,0 +1,80 @@
+const path = require("path");
+const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const UglifyEsPlugin = require("uglify-es-webpack-plugin");
+const extractSASS = new ExtractTextPlugin("bundle.css");
+
+const env = process.env.NODE_ENV;
+const distDir = "public";
+
+const config = {
+  "entry": [
+    path.resolve(__dirname, "src/main/bootstrap.ts")
+  ],
+  "output": {
+    "path": path.join(__dirname, distDir),
+    "filename": "bundle.js"
+  },
+
+  "resolve": {
+    "extensions": [".tsx", ".ts", ".js"],
+    "modules": [
+      path.join(__dirname, "src/main"),
+      "node_modules"
+    ]
+  },
+
+  "devServer": {
+    "contentBase": distDir,
+    "hotOnly": true,
+    "historyApiFallback": true
+  },
+
+  "plugins": [
+    new CleanWebpackPlugin([distDir]),
+    new HtmlWebpackPlugin({
+      "template": "index.html"
+    }),
+    new webpack.DefinePlugin({
+      "process.env": {
+        "NODE_ENV": JSON.stringify(env)
+      }
+    }),
+    extractSASS
+  ],
+
+  "module": {
+    "rules": [
+      {
+        "test": /\.tsx?$/,
+        "use": ["ts-loader"],
+        "exclude": /node_modules/
+      },
+      {
+        "test": /\.(jpg|png|mp4)$/,
+        "use": "file-loader?name=[name].[ext]"
+      },
+      {
+        "test": /\.scss$/,
+        "use": extractSASS.extract(["css-loader?modules", "sass-loader"])
+      }
+    ]
+  }
+};
+
+if (env === "production") {
+  config.plugins.push(new UglifyEsPlugin());
+  config.plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
+  config.plugins.push(new webpack.optimize.AggressiveMergingPlugin());
+  config.plugins.push(new webpack.LoaderOptionsPlugin({"minimize": true}));
+} else {
+  config.entry.unshift("react-hot-loader/patch");
+  config.plugins.push(new webpack.NamedModulesPlugin());
+  config.module.rules[0].use.unshift("react-hot-loader/webpack");
+  config.devtool = "eval";
+  config.externals = {};
+}
+
+module.exports = config;
