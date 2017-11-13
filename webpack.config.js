@@ -26,12 +26,6 @@ const config = {
     ]
   },
 
-  "devServer": {
-    "contentBase": distDir,
-    "hotOnly": true,
-    "historyApiFallback": true
-  },
-
   "plugins": [
     new CleanWebpackPlugin([distDir]),
     new HtmlWebpackPlugin({
@@ -70,9 +64,7 @@ if (env === "production") {
   config.plugins.push(new webpack.optimize.AggressiveMergingPlugin());
   config.plugins.push(new webpack.LoaderOptionsPlugin({"minimize": true}));
 } else {
-  config.entry.unshift("react-hot-loader/patch");
   config.plugins.push(new webpack.NamedModulesPlugin());
-  config.module.rules[0].use.unshift("react-hot-loader/webpack");
   config.devtool = "eval";
   config.externals = {};
 }

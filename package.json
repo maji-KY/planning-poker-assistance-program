@@ -4,10 +4,13 @@
   "description": "Your planning will make more happy!",
   "main": "bootstrap.ts",
   "scripts": {
+    "start": "npm-run-all --parallel build-dev:watch serve",
+    "serve": "firebase serve",
     "lint": "eslint --ext .js,.ts,.tsx src/main src/test webpack.config.js karma.conf.js",
     "test": "karma start karma.conf.js",
     "test-watch": "karma start karma.conf.js --no-single-run",
-    "build-dev": "NODE_ENV=develop webpack",
+    "build-dev": "NODE_ENV=develop webpack --progress",
+    "build-dev:watch": "NODE_ENV=develop webpack --progress --watch",
     "build": "NODE_ENV=production webpack"
   },
   "repository": {
@@ -15,7 +18,7 @@
     "url": "https://github.com/maji-KY/planning-poker-assistance-program.git"
   },
   "author": "maji-KY",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "devDependencies": {
     "@types/jasmine": "^2.6.3",
     "@types/node": "^8.0.51",
@@ -42,18 +45,19 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-webpack": "^2.0.6",
     "node-sass": "^4.6.1",
+    "npm-run-all": "^4.1.2",
     "react-addons-test-utils": "^15.6.2",
-    "react-hot-loader": "^3.1.2",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
     "ts-loader": "^3.1.1",
     "typescript": "^2.6.1",
     "typescript-eslint-parser": "^9.0.0",
     "uglify-es-webpack-plugin": "^0.10.0",
-    "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.4"
+    "webpack": "^3.8.1"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "firebase": "^4.6.2",
     "react": "^16.1.0",
     "react-dom": "^16.1.0",
     "react-redux": "^5.0.6",
