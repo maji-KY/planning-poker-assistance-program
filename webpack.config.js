@@ -11,7 +11,7 @@ const distDir = "public";
 
 const config = {
   "entry": [
-    path.resolve(__dirname, "src/main/bootstrap.ts")
+    path.resolve(__dirname, "src/main/main.tsx")
   ],
   "output": {
     "path": path.join(__dirname, distDir),
