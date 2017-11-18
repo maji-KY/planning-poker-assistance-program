@@ -47,7 +47,7 @@ const config = {
         "exclude": /node_modules/
       },
       {
-        "test": /\.(jpg|png|mp4)$/,
+        "test": /\.(jpg|png|mp4|ico)$/,
         "use": "file-loader?name=[name].[ext]"
       },
       {

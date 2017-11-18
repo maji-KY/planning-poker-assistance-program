@@ -20,6 +20,7 @@
   "author": "maji-KY",
   "license": "MIT",
   "devDependencies": {
+    "@types/classnames": "^2.2.3",
     "@types/jasmine": "^2.6.3",
     "@types/node": "^8.0.51",
     "@types/react": "^16.0.22",
@@ -57,8 +58,10 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "classnames": "^2.2.5",
     "firebase": "^4.6.2",
     "material-ui": "^1.0.0-beta.21",
+    "material-ui-icons": "^1.0.0-beta.17",
     "react": "^16.1.0",
     "react-dom": "^16.1.0",
     "react-redux": "^5.0.6",
