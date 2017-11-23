@@ -14,6 +14,9 @@ import { Route, Switch } from "react-router-dom";
 import createHashHistory from "history/createHashHistory";
 
 import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
+import deepPurple from "material-ui/colors/deepPurple";
+import indigo from "material-ui/colors/indigo";
+
 import MyAppBarMenu from "containers/MyAppBarMenuCntr";
 import Top from "containers/TopCntr";
 import Organization from "containers/OrganizationCntr";
@@ -56,7 +59,15 @@ const store = createStore(reducer, undefined, compose(
 
 const containerElement = document.getElementById("main");
 
-const theme = createMuiTheme();
+const theme = createMuiTheme({
+  "palette": {
+    "primary": indigo,
+    "secondary": deepPurple
+  },
+  "status": {
+    "danger": "orange"
+  }
+});
 
 ReactDOM.render(
   <Provider store={store}>
@@ -77,7 +88,7 @@ ReactDOM.render(
   containerElement
 );
 
-if (window.location.hash != "#/") {
+if (window.location.hash !== "#/") {
   store.dispatch(push("/"));
 }
 

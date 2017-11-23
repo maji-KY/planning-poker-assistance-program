@@ -12,20 +12,26 @@ import { loginDone } from "modules/Auth";
 import { pushError } from "modules/MyAppBarMenu";
 
 // action
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory("USER");
 
 const initUserAsync = actionCreator.async<firebase.User, User, string>("INIT_USER");
 export const initUser = initUserAsync.started;
 export const initUserDone = initUserAsync.done;
 export const initUserFailed = initUserAsync.failed;
 export const updateUser = actionCreator<User>("LOGOUT");
+const modUserAsync = actionCreator.async<User, User, string>("MOD_USER");
+export const modUser = modUserAsync.started;
+export const modUserDone = modUserAsync.done;
+export const modUserFailed = modUserAsync.failed;
 
 // reducer
 interface State {
   loginUser?: User;
+  updating: boolean;
 }
 const initialState = {
-  "loginUser": undefined
+  "loginUser": undefined,
+  "updating": false
 };
 
 export function userReducer(state: State = initialState, action: Action<any>) {
@@ -33,6 +39,19 @@ export function userReducer(state: State = initialState, action: Action<any>) {
     case initUserDone.type:
       return Object.assign({}, state, {
         "loginUser": action.payload.result
+      });
+    case modUser.type:
+      return Object.assign({}, state, {
+        "updating": true
+      });
+    case modUserDone.type:
+      return Object.assign({}, state, {
+        "loginUser": action.payload.result,
+        "updating": false
+      });
+    case modUserFailed.type:
+      return Object.assign({}, state, {
+        "updating": false
       });
     default:
       return state;
@@ -73,4 +92,23 @@ const initUserEpic: Epic<Action<any>, any>
       });
     });
 
-export const epic = combineEpics(loginDoneEpic, initUserEpic);
+const modUserEpic: Epic<Action<any>, any>
+  = (action$) => action$.ofAction(modUser)
+    .mergeMap((action) => {
+      const fs = firebase.firestore();
+      const modifiedUser: User = action.payload;
+      return fs.collection("users").doc(modifiedUser.id).set({
+        "name": modifiedUser.name,
+        "iconUrl": modifiedUser.iconUrl
+      }).then(() => {
+        return modUserDone({"params": modifiedUser, "result": modifiedUser});
+      }).catch((e: any) => {
+        return modUserFailed(e.message);
+      });
+    });
+
+const modUserFailedEpic: Epic<Action<string>, any>
+  = (action$) => action$.ofAction(modUserFailed)
+    .map((action) => pushError(action.payload.error));
+
+export const epic = combineEpics(loginDoneEpic, initUserEpic, modUserEpic, modUserFailedEpic);

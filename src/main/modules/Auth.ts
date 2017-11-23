@@ -10,7 +10,7 @@ import * as firebase from "firebase";
 import { pushError } from "modules/MyAppBarMenu";
 
 // action
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory("AUTH");
 
 const loginAsync = actionCreator.async<{}, firebase.User, string>("LOGIN");
 export const login = loginAsync.started;

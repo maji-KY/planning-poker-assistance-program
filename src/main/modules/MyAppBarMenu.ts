@@ -9,7 +9,7 @@ import "utils/fsa-redux-observable";
 import { Error } from "components/MyAppBarMenu";
 
 // action
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory("APP_BAR");
 
 export const userMenuOpen = actionCreator<HTMLElement>("USER_MENU_OPEN");
 export const userMenuClose = actionCreator<string>("USER_MENU_CLOSE");
