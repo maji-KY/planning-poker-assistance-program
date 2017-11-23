@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as firebase from "firebase";
 
 import * as classNames from 'classnames';
 import Copyable from "utils/Copyable";
@@ -22,7 +21,10 @@ import InputIcon from 'material-ui-icons/Input';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import DomainIcon from 'material-ui-icons/Domain';
 import GroupIcon from 'material-ui-icons/Group';
+import PersonIcon from 'material-ui-icons/Person';
 import SettingsIcon from 'material-ui-icons/Settings';
+
+import User from "models/User";
 
 export class Error extends Copyable<Error> {
   constructor(readonly time: number, readonly message: string, readonly opened: boolean = true) {
@@ -35,7 +37,7 @@ export interface StateProps {
   children: any;
   title: string;
   auth: boolean;
-  user: firebase.UserInfo;
+  loginUser?: User;
   userMenuOpened: boolean;
   userMenuAnchor: HTMLElement;
   drawerOpened: boolean;
@@ -74,7 +76,7 @@ function MyAppBarMenuComponent(props: StateProps & DispatchProps) {
             </Typography>
             { auth ?
               <LoginMenu {...props} /> :
-              <Button color="contrast" onClick={() => login()}>Login&nbsp;<InputIcon /></Button>
+              <Button color="contrast" onClick={() => login()}>Login with Google&nbsp;<InputIcon /></Button>
             }
           </Toolbar>
         </AppBar>
@@ -112,7 +114,7 @@ function MyAppBarMenuComponent(props: StateProps & DispatchProps) {
 }
 
 function LoginMenu(props: StateProps & DispatchProps) {
-  const { user, userMenuOpened, userMenuAnchor, logout, userMenuOpen, userMenuClose, drawerClose, pushError } = props;
+  const { loginUser, userMenuOpened, userMenuAnchor, logout, userMenuOpen, userMenuClose, drawerClose } = props;
   return (
     <div>
       <IconButton
@@ -121,7 +123,7 @@ function LoginMenu(props: StateProps & DispatchProps) {
         onClick={(e: any) => userMenuOpen(e.currentTarget)}
         color="contrast"
       >
-        <Avatar alt="Avatar" src={user.photoURL || ""} />
+        <Avatar alt="Avatar" src={loginUser && loginUser.iconUrl || ""} />
       </IconButton>
       <Menu
         anchorEl={userMenuAnchor}
@@ -136,7 +138,7 @@ function LoginMenu(props: StateProps & DispatchProps) {
         open={userMenuOpened}
         onRequestClose={() => userMenuClose()}
       >
-        <MenuItem onClick={() => pushError("工事中")}>My account</MenuItem>
+        <MenuItem component="a" href="#/account">My account</MenuItem>
         <MenuItem onClick={() => {userMenuClose(); drawerClose(); logout()}}>Logout</MenuItem>
       </Menu>
     </div>
@@ -162,6 +164,12 @@ function AppMenu() {
       </List>
       <Divider />
       <List>
+        <ListItem button component="a" href="#/account">
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary="Account" />
+        </ListItem>
         <ListItem button component="a" href="#/settings">
           <ListItemIcon>
             <SettingsIcon />
@@ -250,11 +258,11 @@ const styles: StyleRulesCallback<string> = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: 24,
-    height: 'calc(100% - 56px)',
+    height: 'calc(100vh - 56px)',
     "overflow": "scroll",
     marginTop: 56,
     [theme.breakpoints.up('sm')]: {
-      height: 'calc(100% - 64px)',
+      height: 'calc(100vh - 64px)',
       marginTop: 64,
     },
   },

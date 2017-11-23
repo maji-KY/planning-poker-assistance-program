@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { createLogger } from "redux-logger";
 import { createEpicMiddleware, combineEpics } from "redux-observable";
 import { reducer as formReducer } from "redux-form";
-import { routerMiddleware, ConnectedRouter } from "react-router-redux";
+import { routerMiddleware, ConnectedRouter, push } from "react-router-redux";
 import { Route, Switch } from "react-router-dom";
 import createHashHistory from "history/createHashHistory";
 
@@ -18,27 +18,27 @@ import MyAppBarMenu from "containers/MyAppBarMenuCntr";
 import Top from "containers/TopCntr";
 import Organization from "containers/OrganizationCntr";
 import Group from "containers/GroupCntr";
+import Account from "containers/AccountCntr";
 import Settings from "containers/SettingsCntr";
 
 import * as AuthModule from "modules/Auth";
 import * as MyAppBarMenuModule from "modules/MyAppBarMenu";
+import * as UserModule from "modules/User";
 
 const history = createHashHistory();
 const epicMiddleware = createEpicMiddleware(
   combineEpics(
-    AuthModule.loginEpic,
-    AuthModule.loginFailedEpic,
-    AuthModule.logoutEpic,
-    MyAppBarMenuModule.myAppBarMenuEpic,
-    MyAppBarMenuModule.pushErrorEpic,
-    MyAppBarMenuModule.closeErrorEpic,
+    AuthModule.epic,
+    MyAppBarMenuModule.epic,
+    UserModule.epic,
   )
 );
 
 const reducer = combineReducers({
   "form": formReducer,
   "authReducer": AuthModule.authReducer,
-  "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer
+  "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer,
+  "userReducer": UserModule.userReducer,
 });
 
 const middleware = [routerMiddleware(history), epicMiddleware];
@@ -67,6 +67,7 @@ ReactDOM.render(
             <Route exact path="/" component={Top} />
             <Route exact path="/organization" component={Organization} />
             <Route exact path="/group" component={Group} />
+            <Route exact path="/account" component={Account} />
             <Route exact path="/settings" component={Settings} />
           </Switch>
         </ConnectedRouter>
@@ -75,6 +76,8 @@ ReactDOM.render(
   </Provider>,
   containerElement
 );
+
+store.dispatch(push("/"));
 
 axios.get("/__/firebase/init.json")
   .then(function (response) {

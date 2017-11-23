@@ -1,5 +1,5 @@
 import actionCreatorFactory, { Action } from "typescript-fsa";
-import { Epic } from "redux-observable";
+import { Epic, combineEpics } from "redux-observable";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import "utils/fsa-redux-observable";
@@ -12,7 +12,7 @@ import { pushError } from "modules/MyAppBarMenu";
 // action
 const actionCreator = actionCreatorFactory();
 
-const loginAsync = actionCreator.async<{}, {}, string>("LOGIN");
+const loginAsync = actionCreator.async<{}, firebase.User, string>("LOGIN");
 export const login = loginAsync.started;
 export const loginDone = loginAsync.done;
 export const loginFailed = loginAsync.failed;
@@ -32,7 +32,7 @@ export function authReducer(state: State = initialState, action: Action<any>) {
     case loginDone.type:
       return Object.assign({}, state, {
         "auth": true,
-        "user": action.payload.result.user
+        "user": action.payload.result
       });
     case logout.type:
       return Object.assign({}, state, {
@@ -44,22 +44,27 @@ export function authReducer(state: State = initialState, action: Action<any>) {
 }
 
 // epic
-export const loginEpic: Epic<Action<{}>, any>
+const loginEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(login)
     .mergeMap((action) => {
       const authInstance = firebase.auth();
       const provider = new firebase.auth.GoogleAuthProvider();
       authInstance.useDeviceLanguage();
       return authInstance.signInWithPopup(provider)
-        .then((result: any) => loginDone({"params": {}, "result": result}))
+        .then((result: any) => loginDone({"params": {}, "result": result.user}))
         .catch((e: any) => {
-          console.log(e);
+          console.error(e);
           return loginFailed({"params": {}, "error": e.message})
         })
     });
-export const loginFailedEpic: Epic<Action<string>, any>
+const loginDoneEpic: Epic<Action<{}>, any>
+  = (action$) => action$.ofAction(loginDone)
+  .map((action) => push("/account"));
+const loginFailedEpic: Epic<Action<string>, any>
   = (action$) => action$.ofAction(loginFailed)
     .map((action) => pushError(action.payload.error));
-export const logoutEpic: Epic<Action<{}>, any>
+const logoutEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(logout)
     .map((action) => push("/"));
+
+export const epic = combineEpics(loginEpic, loginDoneEpic, loginFailedEpic, logoutEpic);

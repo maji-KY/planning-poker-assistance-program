@@ -1,5 +1,5 @@
 import actionCreatorFactory, { Action } from "typescript-fsa";
-import { Epic } from "redux-observable";
+import { Epic, combineEpics } from "redux-observable";
 import "rxjs/add/operator/do";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/delay";
@@ -66,18 +66,20 @@ export function myAppBarMenuReducer(state = initialState, action: Action<any>) {
 }
 
 // epic
-export const myAppBarMenuEpic: Epic<Action<{}>, any>
+const myAppBarMenuEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(userMenuOpen)
     .do((action) => {
       console.log(action);
     })
     .ignoreElements();
 
-export const pushErrorEpic: Epic<Action<Error>, any>
+const pushErrorEpic: Epic<Action<Error>, any>
   = (action$) => action$.ofAction(pushError)
   .map((action) => openError(new Error((new Date).getTime(), action.payload)));
 
-export const closeErrorEpic: Epic<Action<number>, any>
+const closeErrorEpic: Epic<Action<number>, any>
   = (action$) => action$.ofAction(closeError)
     .delay(1000)
     .map((action) => disposeError(action.payload));
+
+export const epic = combineEpics(myAppBarMenuEpic, pushErrorEpic, closeErrorEpic);

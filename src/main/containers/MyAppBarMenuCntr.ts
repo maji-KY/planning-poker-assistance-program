@@ -4,8 +4,8 @@ import { MyAppBarMenu, StateProps, DispatchProps } from "components/MyAppBarMenu
 import { login, logout } from "modules/Auth";
 import { userMenuOpen, userMenuClose, drawerOpen, drawerClose, closeError, pushError } from "modules/MyAppBarMenu";
 
-function mapStateToProps({ authReducer, myAppBarMenuReducer }: any): StateProps {
-  return Object.assign({}, authReducer, myAppBarMenuReducer);
+function mapStateToProps({ authReducer, myAppBarMenuReducer, userReducer }: any): StateProps {
+  return Object.assign({}, authReducer, myAppBarMenuReducer, userReducer);
 }
 
 function mapDispatchToProps(dispatch: Dispatch<{}>): DispatchProps {
