@@ -50,9 +50,9 @@ const loginDoneEpic: Epic<Action<any>, any>
         if (doc.exists) {
           const data = doc.data();
           return initUserDone({"params": authUser, "result": new User(authUser.uid, data.name, data.iconUrl)});
-        } else {
-          return initUser(authUser);
         }
+        return initUser(authUser);
+
       }).catch((e: any) => {
         return pushError(e.message);
       });
@@ -65,7 +65,7 @@ const initUserEpic: Epic<Action<any>, any>
       const authUser: firebase.User = action.payload;
       return fs.collection("users").doc(authUser.uid).set({
         "name": authUser.displayName,
-        "iconUrl": authUser.photoURL,
+        "iconUrl": authUser.photoURL
       }).then(() => {
         return initUserDone({"params": authUser, "result": new User(authUser.uid, authUser.displayName || "", authUser.photoURL || "")});
       }).catch((e: any) => {

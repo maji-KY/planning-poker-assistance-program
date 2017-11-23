@@ -54,11 +54,11 @@ export function myAppBarMenuReducer(state = initialState, action: Action<any>) {
       });
     case closeError.type:
       return Object.assign({}, state, {
-        "errors": state.errors.map((e, i) => (e.time == action.payload) ? e.copy({opened: false}) : e)
+        "errors": state.errors.map((e, i) => e.time === action.payload ? e.copy({"opened": false}) : e)
       });
     case disposeError.type:
       return Object.assign({}, state, {
-        "errors": state.errors.filter((e) => e.time != action.payload)
+        "errors": state.errors.filter((e) => e.time !== action.payload)
       });
     default:
       return state;
@@ -75,7 +75,7 @@ const myAppBarMenuEpic: Epic<Action<{}>, any>
 
 const pushErrorEpic: Epic<Action<Error>, any>
   = (action$) => action$.ofAction(pushError)
-  .map((action) => openError(new Error((new Date).getTime(), action.payload)));
+    .map((action) => openError(new Error((new Date).getTime(), action.payload)));
 
 const closeErrorEpic: Epic<Action<number>, any>
   = (action$) => action$.ofAction(closeError)

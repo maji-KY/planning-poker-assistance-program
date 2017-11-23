@@ -54,12 +54,12 @@ const loginEpic: Epic<Action<{}>, any>
         .then((result: any) => loginDone({"params": {}, "result": result.user}))
         .catch((e: any) => {
           console.error(e);
-          return loginFailed({"params": {}, "error": e.message})
-        })
+          return loginFailed({"params": {}, "error": e.message});
+        });
     });
 const loginDoneEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(loginDone)
-  .map((action) => push("/account"));
+    .map((action) => push("/account"));
 const loginFailedEpic: Epic<Action<string>, any>
   = (action$) => action$.ofAction(loginFailed)
     .map((action) => pushError(action.payload.error));

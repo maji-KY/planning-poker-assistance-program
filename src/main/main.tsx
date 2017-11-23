@@ -13,7 +13,7 @@ import { routerMiddleware, ConnectedRouter, push } from "react-router-redux";
 import { Route, Switch } from "react-router-dom";
 import createHashHistory from "history/createHashHistory";
 
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 import MyAppBarMenu from "containers/MyAppBarMenuCntr";
 import Top from "containers/TopCntr";
 import Organization from "containers/OrganizationCntr";
@@ -38,7 +38,7 @@ const reducer = combineReducers({
   "form": formReducer,
   "authReducer": AuthModule.authReducer,
   "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer,
-  "userReducer": UserModule.userReducer,
+  "userReducer": UserModule.userReducer
 });
 
 const middleware = [routerMiddleware(history), epicMiddleware];
@@ -77,7 +77,9 @@ ReactDOM.render(
   containerElement
 );
 
-store.dispatch(push("/"));
+if (window.location.hash != "#/") {
+  store.dispatch(push("/"));
+}
 
 axios.get("/__/firebase/init.json")
   .then(function (response) {
