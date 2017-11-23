@@ -42,7 +42,7 @@ function UserSettingsFormComponent({currentIconUrl, updating, classes, handleSub
       </div>
       <div>
         <Button type="submit" color="primary" className={classes.button} disabled={pristine || submitting || invalid || updating}>
-          Change
+          Apply
           {updating && <CircularProgress size={24} className={classes.buttonProgress} />}
         </Button>
         <Button type="button" className={classes.button} onClick={reset}>Reset</Button>
