@@ -41,7 +41,7 @@ function UserSettingsFormComponent({currentIconUrl, updating, classes, handleSub
         <Paper className={classes.iconPreviewArea}><img src={currentIconUrl} className={classes.iconPreview} /></Paper>
       </div>
       <div>
-        <Button type="submit" className={classes.button} disabled={pristine || submitting || invalid || updating}>
+        <Button type="submit" color="primary" className={classes.button} disabled={pristine || submitting || invalid || updating}>
           Change
           {updating && <CircularProgress size={24} className={classes.buttonProgress} />}
         </Button>
