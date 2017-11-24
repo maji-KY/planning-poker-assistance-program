@@ -1,10 +1,10 @@
 import Copyable from "utils/Copyable";
 
-export default class Group extends Copyable<Group> {
+export default class Trump extends Copyable<Trump> {
   constructor(
     readonly groupId: string,
     readonly userId: string,
-    readonly rightToTalk: boolean,
+    readonly trump: string,
   ) {
     super();
   }

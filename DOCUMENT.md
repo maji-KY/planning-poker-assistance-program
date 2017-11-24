@@ -22,8 +22,14 @@
 - organizationId
 - name
 - topic
+- allReady
 
 #### GroupUsers
+- groupId
+- userId
+- rightToTalk
+
+#### Trump
 - groupId
 - userId
 - trump
