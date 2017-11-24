@@ -1,9 +1,11 @@
 import * as React from "react";
 
+import Typography from "material-ui/Typography";
+
 export function Organization() {
   return (
     <div>
-      Organization
+      <Typography type="title">Organization</Typography>
     </div>
   );
 }

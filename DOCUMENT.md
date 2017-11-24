@@ -5,34 +5,31 @@
 ### Data Model
 
 #### Users
-- id
-- name
-- iconUrl
+/users/{**userId**}
+- name: string
+- iconUrl: string
 
 #### Organizations
-- id
-- name
+/organizations/{**organizationId**}
+- name: string
 
-#### OrganizationUsers
-- organizationId
-- userId
+#### UserOrganizations
+/UserOrganizations/{**userId**}
+- organizationIds: string[]
 
 #### Groups
-- id
-- organizationId
-- name
-- topic
-- allReady
+/organizations/{**organizationId**}/groups/{**groupId**}
+- name: string
+- topic: string
+- allReady: boolean
 
 #### GroupUsers
-- groupId
-- userId
-- rightToTalk
+/groups/{**groupId**}/user/{**userId**}
+- rightToTalk: boolean
 
 #### Trump
-- groupId
-- userId
-- trump
+/groups/{**groupId**}/trump/{**userId**}
+- trump: string
 
 ### Data Relations
 - Organizations <- OrganizationUsers
