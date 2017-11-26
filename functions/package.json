@@ -14,6 +14,7 @@
     "logs": "firebase functions:log"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.3",
     "@types/jasmine": "^2.8.2",
     "@types/node": "^8.0.53",
     "eslint": "^4.11.0",
@@ -34,6 +35,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
+    "cors": "^2.8.4",
     "firebase-admin": "^5.5.1",
     "firebase-functions": "^0.7.3"
   },
