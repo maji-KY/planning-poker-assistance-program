@@ -66,20 +66,13 @@ export function myAppBarMenuReducer(state = initialState, action: Action<any>) {
 }
 
 // epic
-const myAppBarMenuEpic: Epic<Action<{}>, any>
-  = (action$) => action$.ofAction(userMenuOpen)
-    .do((action) => {
-      console.log(action);
-    })
-    .ignoreElements();
-
 const pushErrorEpic: Epic<Action<Error>, any>
   = (action$) => action$.ofAction(pushError)
     .map((action) => openError(new Error((new Date).getTime(), action.payload)));
 
-const closeErrorEpic: Epic<Action<number>, any>
+const closeErrorEpic: Epic<any, any>
   = (action$) => action$.ofAction(closeError)
     .delay(1000)
     .map((action) => disposeError(action.payload));
 
-export const epic = combineEpics(myAppBarMenuEpic, pushErrorEpic, closeErrorEpic);
+export const epic = combineEpics(pushErrorEpic, closeErrorEpic);

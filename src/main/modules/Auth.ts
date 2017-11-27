@@ -46,7 +46,7 @@ export function authReducer(state: State = initialState, action: Action<any>) {
 // epic
 const loginEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(login)
-    .mergeMap((action) => {
+    .mergeMap(() => {
       const authInstance = firebase.auth();
       const provider = new firebase.auth.GoogleAuthProvider();
       authInstance.useDeviceLanguage();
@@ -65,6 +65,7 @@ const loginFailedEpic: Epic<Action<string>, any>
     .map((action) => pushError(action.payload.error));
 const logoutEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(logout)
-    .map((action) => push("/"));
+    .mergeMap(() => firebase.auth().signOut())
+    .map(() => push("/"));
 
 export const epic = combineEpics(loginEpic, loginDoneEpic, loginFailedEpic, logoutEpic);
