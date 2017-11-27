@@ -3,8 +3,14 @@ service cloud.firestore {
     match /{allChildren=**} {
        allow read: if request.auth.uid != null;
     }
-    match /users/{user} {
-      allow write: if request.auth.uid == user;
+    match /users/{userId} {
+      allow write: if request.auth.uid == userId;
+    }
+    match /organizations/{organizationId} {
+      allow write: if organizationId in get(/UserOrganizations/$(request.auth.uid)).data.organizationIds;
+    }
+    match /UserOrganizations/{userId} {
+      allow read, write: if request.auth.uid == userId;
     }
   }
 }
