@@ -3,7 +3,7 @@ import * as React from "react";
 import * as classNames from "classnames";
 import Copyable from "utils/Copyable";
 
-import { withStyles, StyleRulesCallback } from "material-ui/styles";
+import { withStyles, WithStyles, StyleRulesCallback } from "material-ui/styles";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
@@ -33,7 +33,6 @@ export class Error extends Copyable<Error> {
 }
 
 export interface StateProps {
-  classes: any;
   children: any;
   title: string;
   auth: boolean;
@@ -54,7 +53,7 @@ export interface DispatchProps {
   pushError: Function;
 }
 
-function MyAppBarMenuComponent(props: StateProps & DispatchProps) {
+function MyAppBarMenuComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
   const { children, title, auth, login, drawerOpened, errors } = props;
   const { drawerOpen, drawerClose, closeError } = props;

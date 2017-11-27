@@ -2,7 +2,7 @@ import * as React from "react";
 import {Field} from "redux-form";
 import TextField from "material-ui/TextField";
 
-const generateInputComponent = (fullWidth?: boolean) => function InputComponent({
+function InputComponent({
   input,
   placeholder,
   label,
@@ -16,8 +16,29 @@ const generateInputComponent = (fullWidth?: boolean) => function InputComponent(
     placeholder={placeholder}
     label={isError ? error : label}
     error={isError}
-    fullWidth={fullWidth}/>;
-};
+    fullWidth
+  />;
+}
+
+function AutoFocusInputComponent({
+  input,
+  placeholder,
+  label,
+  "meta": {
+    touched,
+    error
+  }
+}: any): JSX.Element {
+  const isError = !!(touched && error);
+  return <TextField {...input}
+    placeholder={placeholder}
+    label={isError ? error : label}
+    error={isError}
+    fullWidth
+    autoFocus
+    margin="dense"
+  />;
+}
 
 export interface Props {
   name: string;
@@ -27,12 +48,21 @@ export interface Props {
   validate?: any;
   componentClass?: any;
   fullWidth?: boolean;
+  autoFocus?: boolean;
+  margin?: string;
   children?: any;
 }
 
 export function MyTextField(props: Props) {
   return <Field
-    component={generateInputComponent(props.fullWidth)}
+    component={InputComponent}
+    {...props}
+  >{props.children}</Field>;
+}
+
+export function MyAutoFocusTextField(props: Props) {
+  return <Field
+    component={AutoFocusInputComponent}
     {...props}
   >{props.children}</Field>;
 }

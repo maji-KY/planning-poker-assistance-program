@@ -2,7 +2,7 @@ import axios from "axios";
 import * as React from "react";
 import { InjectedFormProps } from "redux-form";
 
-import { withStyles, StyleRulesCallback } from "material-ui/styles";
+import { withStyles, WithStyles, StyleRulesCallback } from "material-ui/styles";
 import Button from "material-ui/Button";
 import Paper from "material-ui/Paper";
 import { CircularProgress } from "material-ui/Progress";
@@ -21,21 +21,20 @@ export const asyncValidate = (values: any) => axios
   .catch(() => {throw {"iconUrl": "cannot access the URL"}});
 
 export interface StateProps {
-  classes: any;
   currentIconUrl?: string;
   loginUser?: User;
   updating: boolean;
 }
 
-function UserSettingsFormComponent({currentIconUrl, updating, classes, handleSubmit, pristine, submitting, invalid, reset}: InjectedFormProps & StateProps) {
+function UserSettingsFormComponent({currentIconUrl, updating, classes, handleSubmit, pristine, submitting, invalid, reset}: InjectedFormProps & StateProps & WithStyles) {
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <MyTextField fullWidth name="name" type="text" label="name" placeholder="name" validate={[required, notNbsp]} />
+        <MyTextField name="name" type="text" label="name" placeholder="name" validate={[required, notNbsp]} />
       </div>
       <div>
-        <MyTextField fullWidth name="iconUrl" type="text" label="iconUrl" placeholder="iconUrl" validate={[required, isValidUrl]} />
+        <MyTextField name="iconUrl" type="text" label="iconUrl" placeholder="iconUrl" validate={[required, isValidUrl]} />
       </div>
       <div>
         <Paper className={classes.iconPreviewArea}><img src={currentIconUrl} className={classes.iconPreview} /></Paper>

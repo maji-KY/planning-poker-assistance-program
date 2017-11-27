@@ -19,7 +19,7 @@ import indigo from "material-ui/colors/indigo";
 
 import MyAppBarMenu from "containers/MyAppBarMenuCntr";
 import Top from "containers/TopCntr";
-import Organization from "containers/OrganizationCntr";
+import Organization from "containers/organization/OrganizationCntr";
 import Group from "containers/GroupCntr";
 import Account from "containers/AccountCntr";
 import Settings from "containers/SettingsCntr";
@@ -27,6 +27,7 @@ import Settings from "containers/SettingsCntr";
 import * as AuthModule from "modules/Auth";
 import * as MyAppBarMenuModule from "modules/MyAppBarMenu";
 import * as UserModule from "modules/User";
+import * as OrganizationModule from "modules/Organization";
 
 const history = createHashHistory();
 const epicMiddleware = createEpicMiddleware(
@@ -34,6 +35,7 @@ const epicMiddleware = createEpicMiddleware(
     AuthModule.epic,
     MyAppBarMenuModule.epic,
     UserModule.epic,
+    OrganizationModule.epic,
   )
 );
 
@@ -41,7 +43,8 @@ const reducer = combineReducers({
   "form": formReducer,
   "authReducer": AuthModule.authReducer,
   "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer,
-  "userReducer": UserModule.userReducer
+  "userReducer": UserModule.userReducer,
+  "organizationReducer": OrganizationModule.organizationReducer
 });
 
 const middleware = [routerMiddleware(history), epicMiddleware];

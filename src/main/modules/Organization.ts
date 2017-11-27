@@ -1,7 +1,11 @@
+import axios from "axios";
+
 import actionCreatorFactory, { Action } from "typescript-fsa";
 import { Epic, combineEpics } from "redux-observable";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
+import "rxjs/add/operator/share";
+import "rxjs/add/operator/merge";
 import "utils/fsa-redux-observable";
 
 import * as firebase from "firebase";
@@ -9,7 +13,10 @@ import "firebase/firestore";
 
 import User from "models/User";
 import Organization from "models/Organization";
+import { initUserDone } from "modules/User";
 import { pushError } from "modules/MyAppBarMenu";
+import { funcURL } from "utils/CloudFunctions";
+import { reset } from "redux-form";
 
 // action
 const actionCreator = actionCreatorFactory("ORGANIZATION");
@@ -23,30 +30,46 @@ export const loadJoined = loadJoinedAsync.started;
 export const loadJoinedDone = loadJoinedAsync.done;
 export const loadJoinedFailed = loadJoinedAsync.failed;
 
+export const createDialogOpen = actionCreator<{}>("CREATE_DIALOG_OPEN");
+export const createDialogClose = actionCreator<{}>("CREATE_DIALOG_CLOSE");
+
+export interface CreateOrganizationParam {
+  user: User;
+  name: string;
+}
+const createAsync = actionCreator.async<CreateOrganizationParam, User, string>("CREATE");
+export const create = createAsync.started;
+export const createDone = createAsync.done;
+export const createFailed = createAsync.failed;
+
 // reducer
 interface State {
   organizations: Organization[];
-  joinedOrganizationsIds: string[];
+  joinedOrganizationIds: string[];
   loading: boolean;
   loadingJoined: boolean;
+  createDialogOpened: boolean;
+  creating: boolean;
 }
 const initialState = {
   "organizations": [],
-  "joinedOrganizationsIds": [],
-  "loading": false,
-  "loadingJoined": false
+  "joinedOrganizationIds": [],
+  "loading": true,
+  "loadingJoined": true,
+  "createDialogOpened": false,
+  "creating": false
 };
 
 export function organizationReducer(state: State = initialState, action: Action<any>) {
   switch (action.type) {
     case load.type:
       return Object.assign({}, state, {
-        "updating": true
+        "loading": true
       });
     case loadDone.type:
       return Object.assign({}, state, {
         "organizations": action.payload.result,
-        "updating": false
+        "loading": false
       });
     case loadJoined.type:
       return Object.assign({}, state, {
@@ -54,8 +77,28 @@ export function organizationReducer(state: State = initialState, action: Action<
       });
     case loadJoinedDone.type:
       return Object.assign({}, state, {
-        "joinedOrganizationsIds": action.payload.result,
+        "joinedOrganizationIds": action.payload.result,
         "loadingJoined": false
+      });
+    case createDialogOpen.type:
+      return Object.assign({}, state, {
+        "createDialogOpened": true
+      });
+    case createDialogClose.type:
+      return Object.assign({}, state, {
+        "createDialogOpened": false
+      });
+    case create.type:
+      return Object.assign({}, state, {
+        "creating": true
+      });
+    case createDone.type:
+      return Object.assign({}, state, {
+        "creating": false
+      });
+    case createFailed.type:
+      return Object.assign({}, state, {
+        "creating": false
       });
     default:
       return state;
@@ -63,6 +106,12 @@ export function organizationReducer(state: State = initialState, action: Action<
 }
 
 // epic
+const showOrganizationEpic: Epic<Action<any>, any>
+  = (action$) => {
+    const loginDone = action$.ofAction(initUserDone);
+    return loginDone.map(() => load({}))
+      .merge(loginDone.map((action) => loadJoined(action.payload.result)));
+  };
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
     .mergeMap(() => {
@@ -91,5 +140,35 @@ const loadJoinedEpic: Epic<Action<any>, any>
 const loadJoinedFailedEpic: Epic<Action<string>, any>
   = (action$) => action$.ofAction(loadJoinedFailed)
     .map((action) => pushError(action.payload.error));
+const createEpic: Epic<Action<any>, any>
+  = (action$) => action$.ofAction(create)
+    .mergeMap((action) => {
+      const { user, name } = action.payload;
+      return axios.post(funcURL("createOrganization"), {
+        "userId": user.id,
+        "organizationName": name
+      }).then(() => createDone({"params": action.payload, "result": user}))
+        .catch((e: any) => createFailed(e.message));
+    });
+const createDoneEpic: Epic<any, any>
+  = (action$) => {
+    const createDoneFlow = action$.ofAction(createDone);
+    return createDoneFlow.map(() => load({}))
+      .merge(createDoneFlow.map((action) => loadJoined(action.payload.result)))
+      .merge(createDoneFlow.map(() => createDialogClose({})))
+      .merge(createDoneFlow.map(() => reset("CreateOrganizationForm")));
+  };
+const createFailedEpic: Epic<Action<string>, any>
+  = (action$) => action$.ofAction(createFailed)
+    .map((action) => pushError(action.payload.error));
 
-export const epic = combineEpics(loadEpic, loadFailedEpic, loadJoinedEpic, loadJoinedFailedEpic);
+export const epic = combineEpics(
+  showOrganizationEpic,
+  loadEpic,
+  loadFailedEpic,
+  loadJoinedEpic,
+  loadJoinedFailedEpic,
+  createEpic,
+  createDoneEpic,
+  createFailedEpic
+);
