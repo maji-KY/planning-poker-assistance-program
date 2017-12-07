@@ -96,7 +96,7 @@ export function groupReducer(state: State = initialState, action: Action<any>) {
 const organizationReg = /^\/organization\/(\w+)$/;
 const showGroupEpic: Epic<Action<any>, any>
   = (action$) => locationChangeOf(action$, organizationReg)
-  .map((action: LocationChangeAction) => load(action.payload.pathname.replace(organizationReg, "$1")));
+    .map((action: LocationChangeAction) => load(action.payload.pathname.replace(organizationReg, "$1")));
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
     .mergeMap((action) => {
@@ -107,7 +107,7 @@ const loadEpic: Epic<Action<any>, any>
             const data = doc.data();
             return new Group(doc.id, action.payload, data.name, data.topic, data.allReady);
           });
-          return loadDone({"params": action.payload, "result": result});
+          return loadDone({"params": action.payload, result});
         })
         .catch((e: any) => loadFailed(e.message));
     });

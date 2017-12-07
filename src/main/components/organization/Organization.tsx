@@ -8,7 +8,7 @@ import List, { ListItem, ListItemText } from "material-ui/List";
 import Divider from "material-ui/Divider";
 import Button from "material-ui/Button";
 import Tooltip from "material-ui/Tooltip";
-import { CircularProgress } from 'material-ui/Progress';
+import { CircularProgress } from "material-ui/Progress";
 import AddIcon from "material-ui-icons/Add";
 import RefreshIcon from "material-ui-icons/Refresh";
 
@@ -95,7 +95,7 @@ const styles: StyleRulesCallback<string> = theme => ({
   "bottomButtons": {
     "position": "fixed",
     "bottom": 0,
-    "z-index": 999,
+    "z-index": 999
   },
   "bottomButton": {
     "margin": theme.spacing.unit * 3

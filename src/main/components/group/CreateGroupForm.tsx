@@ -8,8 +8,8 @@ import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-} from 'material-ui/Dialog';
+  DialogTitle
+} from "material-ui/Dialog";
 
 import { MyAutoFocusTextField } from "components/parts/FormField";
 import User from "models/User";

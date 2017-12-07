@@ -15,7 +15,7 @@ function handleSubmit(value: any, dispatch: Dispatch<{}>, props: InjectedFormPro
 }
 
 function validation(values: any, props: any): FormErrors<FormData> {
-  const { name: nameValue } = values;
+  const { "name": nameValue } = values;
   const name = required(nameValue) || notNbsp(nameValue) || duplicate(nameValue, values, props) || undefined;
   return name ? {name} : {};
 }

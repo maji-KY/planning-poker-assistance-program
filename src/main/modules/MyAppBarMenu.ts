@@ -81,6 +81,6 @@ const closeErrorEpic: Epic<any, any>
 
 const transitionEpic: Epic<any, any>
   = (action$) => action$.ofAction(transition)
-  .map((action) => push(action.payload));
+    .map((action) => push(action.payload));
 
 export const epic = combineEpics(pushErrorEpic, closeErrorEpic, transitionEpic);
