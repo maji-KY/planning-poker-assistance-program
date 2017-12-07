@@ -1,6 +1,6 @@
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
-import { Group } from "components/Group";
+import { Group } from "components/group/Group";
 
 function mapStateToProps({ authReducer, myAppBarMenuReducer }: any): any {
   return Object.assign({}, authReducer, myAppBarMenuReducer);

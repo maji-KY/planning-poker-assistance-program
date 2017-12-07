@@ -10,6 +10,7 @@ import Button from "material-ui/Button";
 import Tooltip from "material-ui/Tooltip";
 import { CircularProgress } from 'material-ui/Progress';
 import AddIcon from "material-ui-icons/Add";
+import RefreshIcon from "material-ui-icons/Refresh";
 
 import CreateOrganizationForm from "containers/organization/CreateOrganizationFormCntr";
 import OrganizationModel from "models/Organization";
@@ -26,12 +27,14 @@ interface StateProps {
 export interface DispatchProps {
   createDialogOpen: Function;
   createDialogClose: Function;
+  refresh: Function;
+  transition: Function;
 }
 
 function OrganizationComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
-  const { organizations, joinedOrganizationIds, loading, loadingJoined } = props;
-  const { createDialogOpen } = props;
+  const { organizations, joinedOrganizationIds, loading, loadingJoined, user } = props;
+  const { createDialogOpen, transition, refresh } = props;
   return (
     <div>
       <Typography type="title" className={classes.title}>Organization</Typography>
@@ -40,27 +43,36 @@ function OrganizationComponent(props: StateProps & DispatchProps & WithStyles) {
           {loading || loadingJoined ? <CircularProgress className={classes.loadingCircle} /> : organizations
             .filter((x: OrganizationModel) => joinedOrganizationIds.find((id: string) => id === x.id))
             .map((x: OrganizationModel, i: number) =>
-              <ListItem key={i} button>
+              <ListItem key={i} button onClick={() => transition(`/organization/${x.id}`)}>
                 <ListItemText primary={x.name} />
               </ListItem>
             )}
         </List>
         <Divider />
         <List className={classes.list} subheader={<ListSubheader className={classes.stickey}>All Organizations</ListSubheader>}>
-          {loading ? <CircularProgress  className={classes.loadingCircle} /> : organizations.map((x: OrganizationModel, i: number) =>
-            <ListItem key={i} button>
+          {loading ? <CircularProgress className={classes.loadingCircle} /> : organizations.map((x: OrganizationModel, i: number) =>
+            <ListItem key={i} button onClick={() => transition(`/organization/${x.id}`)}>
               <ListItemText primary={x.name} />
             </ListItem>
           )}
         </List>
       </Paper>
-      {loading ? "" : (
+      <div className={classes.bottomButtons}>
         <Tooltip title="Create New Organization" placement="bottom">
-          <Button className={classes.create} onClick={() => createDialogOpen()} fab color="primary" aria-label="Create New Organization">
-            <AddIcon />
-          </Button>
+          <span>
+            <Button className={classes.bottomButton} onClick={() => createDialogOpen()} fab color="primary" aria-label="Create New Organization" disabled={loading || loadingJoined}>
+              <AddIcon />
+            </Button>
+          </span>
         </Tooltip>
-      )}
+        <Tooltip title="Refresh" placement="bottom">
+          <span>
+            <Button className={classes.bottomButton} onClick={() => refresh(user)} fab color="default" aria-label="Refresh" disabled={loading || loadingJoined}>
+              <RefreshIcon />
+            </Button>
+          </span>
+        </Tooltip>
+      </div>
       <CreateOrganizationForm />
     </div>
   );
@@ -80,7 +92,12 @@ const styles: StyleRulesCallback<string> = theme => ({
   "title": {
     "margin": 10
   },
-  "create": {
+  "bottomButtons": {
+    "position": "fixed",
+    "bottom": 0,
+    "z-index": 999,
+  },
+  "bottomButton": {
     "margin": theme.spacing.unit * 3
   },
   "loadingCircle": {

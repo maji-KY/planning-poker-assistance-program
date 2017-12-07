@@ -6,10 +6,14 @@ import "rxjs/add/operator/delay";
 import "rxjs/add/operator/ignoreElements";
 import "utils/fsa-redux-observable";
 
+import { push } from "react-router-redux";
+
 import { Error } from "components/MyAppBarMenu";
 
 // action
 const actionCreator = actionCreatorFactory("APP_BAR");
+
+export const transition = actionCreator<string>("TRANSITION");
 
 export const userMenuOpen = actionCreator<HTMLElement>("USER_MENU_OPEN");
 export const userMenuClose = actionCreator<string>("USER_MENU_CLOSE");
@@ -75,4 +79,8 @@ const closeErrorEpic: Epic<any, any>
     .delay(1000)
     .map((action) => disposeError(action.payload));
 
-export const epic = combineEpics(pushErrorEpic, closeErrorEpic);
+const transitionEpic: Epic<any, any>
+  = (action$) => action$.ofAction(transition)
+  .map((action) => push(action.payload));
+
+export const epic = combineEpics(pushErrorEpic, closeErrorEpic, transitionEpic);

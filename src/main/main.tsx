@@ -20,7 +20,8 @@ import indigo from "material-ui/colors/indigo";
 import MyAppBarMenu from "containers/MyAppBarMenuCntr";
 import Top from "containers/TopCntr";
 import Organization from "containers/organization/OrganizationCntr";
-import Group from "containers/GroupCntr";
+import OrganizationDetail from "containers/organization/OrganizationDetailCntr";
+import Group from "containers/group/GroupCntr";
 import Account from "containers/AccountCntr";
 import Settings from "containers/SettingsCntr";
 
@@ -28,6 +29,7 @@ import * as AuthModule from "modules/Auth";
 import * as MyAppBarMenuModule from "modules/MyAppBarMenu";
 import * as UserModule from "modules/User";
 import * as OrganizationModule from "modules/Organization";
+import * as GroupModule from "modules/Group";
 
 const history = createHashHistory();
 const epicMiddleware = createEpicMiddleware(
@@ -36,6 +38,7 @@ const epicMiddleware = createEpicMiddleware(
     MyAppBarMenuModule.epic,
     UserModule.epic,
     OrganizationModule.epic,
+    GroupModule.epic,
   )
 );
 
@@ -44,7 +47,8 @@ const reducer = combineReducers({
   "authReducer": AuthModule.authReducer,
   "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer,
   "userReducer": UserModule.userReducer,
-  "organizationReducer": OrganizationModule.organizationReducer
+  "organizationReducer": OrganizationModule.organizationReducer,
+  "groupReducer": GroupModule.groupReducer
 });
 
 const middleware = [routerMiddleware(history), epicMiddleware];
@@ -80,6 +84,7 @@ ReactDOM.render(
           <Switch>
             <Route exact path="/" component={Top} />
             <Route exact path="/organization" component={Organization} />
+            <Route exact path="/organization/:organizationId" component={OrganizationDetail} />
             <Route exact path="/group" component={Group} />
             <Route exact path="/account" component={Account} />
             <Route exact path="/settings" component={Settings} />

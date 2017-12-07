@@ -29,6 +29,7 @@ const loadJoinedAsync = actionCreator.async<User, string[], string>("LOAD_JOINED
 export const loadJoined = loadJoinedAsync.started;
 export const loadJoinedDone = loadJoinedAsync.done;
 export const loadJoinedFailed = loadJoinedAsync.failed;
+export const refresh = actionCreator<User>("REFRESH");
 
 export const createDialogOpen = actionCreator<{}>("CREATE_DIALOG_OPEN");
 export const createDialogClose = actionCreator<{}>("CREATE_DIALOG_CLOSE");
@@ -112,6 +113,12 @@ const showOrganizationEpic: Epic<Action<any>, any>
     return loginDone.map(() => load({}))
       .merge(loginDone.map((action) => loadJoined(action.payload.result)));
   };
+const refreshEpic: Epic<Action<any>, any>
+  = (action$) => {
+    const refreshFlow = action$.ofAction(refresh);
+    return refreshFlow.map(() => load({}))
+      .merge(refreshFlow.map((action) => loadJoined(action.payload)));
+  };
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
     .mergeMap(() => {
@@ -164,6 +171,7 @@ const createFailedEpic: Epic<Action<string>, any>
 
 export const epic = combineEpics(
   showOrganizationEpic,
+  refreshEpic,
   loadEpic,
   loadFailedEpic,
   loadJoinedEpic,
