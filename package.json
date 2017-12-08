@@ -6,12 +6,13 @@
   "scripts": {
     "start": "npm-run-all --parallel build-dev:watch serve",
     "serve": "firebase serve",
-    "lint": "eslint --ext .js,.ts,.tsx src/main src/test webpack.config.js karma.conf.js",
+    "lint": "eslint --ext .js,.ts,.tsx src/main src/test storybook webpack.config.js karma.conf.js",
     "test": "karma start karma.conf.js",
     "test-watch": "karma start karma.conf.js --no-single-run",
     "build-dev": "NODE_ENV=develop webpack --progress",
     "build-dev:watch": "NODE_ENV=develop webpack --progress --watch",
-    "build": "NODE_ENV=production webpack"
+    "build": "NODE_ENV=production webpack",
+    "storybook": "start-storybook -p 6006"
   },
   "repository": {
     "type": "git",
@@ -53,7 +54,15 @@
     "typescript": "^2.6.1",
     "typescript-eslint-parser": "^9.0.0",
     "uglify-es-webpack-plugin": "^0.10.0",
-    "webpack": "^3.8.1"
+    "webpack": "^3.8.1",
+    "@storybook/addon-actions": "^3.2.17",
+    "@storybook/addon-links": "^3.2.17",
+    "@storybook/react": "^3.2.17",
+    "@storybook/cli": "^3.2.17",
+    "@types/jest": "^21.1.8",
+    "@types/storybook__addon-actions": "^3.0.1",
+    "@types/storybook__addon-links": "^3.0.2",
+    "@types/storybook__react": "^3.0.5"
   },
   "dependencies": {
     "axios": "^0.17.1",
