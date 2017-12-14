@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const UglifyEsPlugin = require("uglify-es-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const extractSASS = new ExtractTextPlugin("bundle.css");
 
 const env = process.env.NODE_ENV;
@@ -59,7 +59,11 @@ const config = {
 };
 
 if (env === "production") {
-  config.plugins.push(new UglifyEsPlugin());
+  config.plugins.push(new UglifyJsPlugin({
+    "uglifyOptions": {
+      "ecma": 8
+    }
+  }));
   config.plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
   config.plugins.push(new webpack.optimize.AggressiveMergingPlugin());
   config.plugins.push(new webpack.LoaderOptionsPlugin({"minimize": true}));

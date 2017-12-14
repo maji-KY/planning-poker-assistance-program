@@ -1,6 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
-const UglifyEsPlugin = require("uglify-es-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const nodeExternals = require("webpack-node-externals");
 
 const env = process.env.NODE_ENV;
@@ -46,7 +46,11 @@ const config = {
 };
 
 if (env === "production") {
-  config.plugins.push(new UglifyEsPlugin());
+  config.plugins.push(new UglifyJsPlugin({
+    "uglifyOptions": {
+      "ecma": 8
+    }
+  }));
   config.plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
   config.plugins.push(new webpack.optimize.AggressiveMergingPlugin());
   config.plugins.push(new webpack.LoaderOptionsPlugin({"minimize": true}));

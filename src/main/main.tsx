@@ -70,9 +70,6 @@ const theme = createMuiTheme({
   "palette": {
     "primary": indigo,
     "secondary": deepPurple
-  },
-  "status": {
-    "danger": "orange"
   }
 });
 
