@@ -1,12 +1,10 @@
 import * as React from "react";
+import { combineReducers, createStore } from "redux";
+import { Provider } from "react-redux";
 
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-// import { linkTo } from '@storybook/addon-links';
-
-import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
-import deepPurple from "material-ui/colors/deepPurple";
-import indigo from "material-ui/colors/indigo";
+import { boolean, object } from "@storybook/addon-knobs";
 
 import Button from "material-ui/Button";
 import { OrganizationDetail } from "components/organization/OrganizationDetail";
@@ -23,39 +21,37 @@ const groups = [
 const user = new User("userId", "user1", "");
 const anyObj: any = {};
 
-const theme = createMuiTheme({
-  "palette": {
-    "primary": indigo,
-    "secondary": deepPurple
-  }
-});
-function PlaybookProvider(props: any) {
-  return (
-    <MuiThemeProvider theme={theme}>
-      {props.children}
-    </MuiThemeProvider>
-  );
-}
+const reducer = combineReducers(
+  {
+    "groupReducer": () => ({
+      "groups": [],
+      "createDialogOpened": false,
+      "creating": false
+    }),
+    "userReducer": () => ({
+      "loginUser": user
+    })
+  });
+const store = createStore(reducer);
 
 storiesOf("OrganizationDetailCntr", module)
-  .add("show", () =>
-
-    <PlaybookProvider>
+  .addDecorator((story: any) => <Provider store={store}>{story()}</Provider>)
+  .add("show", () => {
+    return (
       <OrganizationDetail
-        organizations={orgs}
-        groups={groups}
-        createDialogOpened={false}
-        loading={false}
-        user={user}
-        createDialogOpen={() => {}}
-        createDialogClose={() => {}}
-        load={() => {}}
-        match={{"params": "id1", "isExact": false, "path": "", "url": ""}}
+        organizations={object("orgs", orgs)}
+        groups={object("groups", groups)}
+        loading={boolean("loading", false)}
+        user={object("user", user)}
+        createDialogOpen={action("createDialogOpen")}
+        createDialogClose={action("createDialogClose")}
+        load={action("load")}
+        match={object("match", {"params": {"organizationId": "id1"}, "isExact": false, "path": "", "url": ""})}
         location={anyObj}
         history={anyObj}
       />
-    </PlaybookProvider>
-
+    );
+  }
   );
 
 storiesOf("Button", module)

@@ -21,7 +21,6 @@ import User from "models/User";
 interface StateProps {
   organizations: OrganizationModel[];
   groups: GroupModel[];
-  createDialogOpened: boolean;
   loading: boolean;
   user: User;
 }
