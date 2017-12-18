@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import actionCreatorFactory, { Action } from "typescript-fsa";
 import { Epic, combineEpics } from "redux-observable";
 import "rxjs/add/operator/mergeMap";
@@ -15,7 +13,7 @@ import User from "models/User";
 import Organization from "models/Organization";
 import { initUserDone } from "modules/User";
 import { pushError } from "modules/MyAppBarMenu";
-import { funcURL } from "utils/CloudFunctions";
+import { post } from "utils/CloudFunctions";
 import { reset } from "redux-form";
 
 // action
@@ -151,8 +149,7 @@ const createEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(create)
     .mergeMap((action) => {
       const { user, name } = action.payload;
-      return axios.post(funcURL("createOrganization"), {
-        "userId": user.id,
+      return post("createOrganization", {
         "organizationName": name
       }).then(() => createDone({"params": action.payload, "result": user}))
         .catch((e: any) => createFailed(e.message));

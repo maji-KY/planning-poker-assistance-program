@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import { LocationChangeAction } from "react-router-redux";
 import actionCreatorFactory, { Action } from "typescript-fsa";
 import { Epic, combineEpics } from "redux-observable";
@@ -16,7 +14,7 @@ import User from "models/User";
 import Organization from "models/Organization";
 import Group from "models/Group";
 import { pushError } from "modules/MyAppBarMenu";
-import { funcURL } from "utils/CloudFunctions";
+import { post } from "utils/CloudFunctions";
 import { locationChangeOf } from "utils/LocationChanges";
 import { reset } from "redux-form";
 
@@ -118,8 +116,7 @@ const createEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(create)
     .mergeMap((action) => {
       const { user, organization, name } = action.payload;
-      return axios.post(funcURL("createGroup"), {
-        "userId": user.id,
+      return post("createGroup", {
         "organizationId": organization.id,
         "groupName": name
       }).then(() => createDone({"params": action.payload, "result": user}))
