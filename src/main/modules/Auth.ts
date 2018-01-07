@@ -7,12 +7,13 @@ import "utils/fsa-redux-observable";
 import { push } from "react-router-redux";
 
 import * as firebase from "firebase";
+import { User as FirebaseUser } from "@firebase/auth-types";
 import { pushError } from "modules/MyAppBarMenu";
 
 // action
 const actionCreator = actionCreatorFactory("AUTH");
 
-const loginAsync = actionCreator.async<{}, firebase.User, string>("LOGIN");
+const loginAsync = actionCreator.async<{}, FirebaseUser, string>("LOGIN");
 export const login = loginAsync.started;
 export const loginDone = loginAsync.done;
 export const loginFailed = loginAsync.failed;
@@ -21,7 +22,7 @@ export const logout = actionCreator<string>("LOGOUT");
 // reducer
 interface State {
   auth: boolean;
-  user?: firebase.User;
+  user?: FirebaseUser;
 }
 const initialState = {
   "auth": false
@@ -47,6 +48,7 @@ export function authReducer(state: State = initialState, action: Action<any>) {
 const loginEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(login)
     .mergeMap(() => {
+      if (!firebase.auth) return Promise.reject("firebase.auth not found");
       const authInstance = firebase.auth();
       const provider = new firebase.auth.GoogleAuthProvider();
       authInstance.useDeviceLanguage();
@@ -65,7 +67,13 @@ const loginFailedEpic: Epic<Action<string>, any>
     .map((action) => pushError(action.payload.error));
 const logoutEpic: Epic<Action<{}>, any>
   = (action$) => action$.ofAction(logout)
-    .mergeMap(() => firebase.auth().signOut())
+    .mergeMap(() => {
+      if (firebase.auth) {
+        return firebase.auth().signOut();
+      } else {
+        return Promise.reject("firebase.auth not found");
+      }
+    })
     .map(() => push("/"));
 
 export const epic = combineEpics(loginEpic, loginDoneEpic, loginFailedEpic, logoutEpic);

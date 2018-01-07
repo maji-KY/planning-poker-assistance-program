@@ -12,6 +12,8 @@ import Organization from "models/Organization";
 import Group from "models/Group";
 import User from "models/User";
 
+import "./board";
+
 const orgs = [new Organization("id1", "name1")];
 const groups = [
   new Group("id1", "id1", "group1", "", false),

@@ -8,6 +8,7 @@ export function funcURL(funcName: string): string {
 }
 
 export function post(funcName: string, data: any): AxiosPromise<any> {
+  if (!firebase.auth) return Promise.reject("firebase.auth not found");
   const currentUser = firebase.auth().currentUser;
   return currentUser ? currentUser.getIdToken(true).then(x =>
     axios.post(funcURL(funcName), data, {"headers": {"Authorization": `Bearer ${x}`}})

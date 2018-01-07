@@ -7,8 +7,7 @@ import "rxjs/add/operator/share";
 import "rxjs/add/operator/merge";
 import "utils/fsa-redux-observable";
 
-import * as firebase from "firebase";
-import "firebase/firestore";
+import { getFirestore } from "utils/Firebase";
 
 import User from "models/User";
 import Organization from "models/Organization";
@@ -98,7 +97,7 @@ const showGroupEpic: Epic<Action<any>, any>
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
     .mergeMap((action) => {
-      const fs = firebase.firestore();
+      const fs = getFirestore();
       return fs.collection("organizations").doc(action.payload).collection("groups").get()
         .then((collection) => {
           const result = collection.docs.map(doc => {

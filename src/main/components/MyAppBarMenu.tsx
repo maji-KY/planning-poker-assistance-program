@@ -102,7 +102,7 @@ function MyAppBarMenuComponent(props: StateProps & DispatchProps & WithStyles) {
             key={error.time}
             anchorOrigin={{"vertical": "bottom", "horizontal": "right"}}
             open={error.opened}
-            onRequestClose={() => closeError(error.time)}
+            onClose={() => closeError(error.time)}
             autoHideDuration={5000}
             message={<Typography className={classes.error}>Error: {error.message}</Typography>}
           />
@@ -135,7 +135,7 @@ function LoginMenu(props: StateProps & DispatchProps) {
           "horizontal": "right"
         }}
         open={userMenuOpened}
-        onRequestClose={() => userMenuClose()}
+        onClose={() => userMenuClose()}
       >
         <MenuItem component="a" href="#/account">My account</MenuItem>
         <MenuItem onClick={() => {userMenuClose(); drawerClose(); logout()}}>Logout</MenuItem>

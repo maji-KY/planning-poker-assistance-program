@@ -44,7 +44,7 @@ function CreateGroupFormComponent({
 }: InjectedFormProps & StateProps & DispatchProps & WithStyles) {
 
   return (
-    <Dialog open={createDialogOpened} onRequestClose={() => createDialogClose()}>
+    <Dialog open={createDialogOpened} onClose={() => createDialogClose()}>
       <Form onSubmit={handleSubmit}>
         <DialogTitle>Create New Group</DialogTitle>
         <DialogContent>

@@ -1,6 +1,6 @@
 import Copyable from "utils/Copyable";
 
-export default class Group extends Copyable<Group> {
+export default class GroupUser extends Copyable<GroupUser> {
   constructor(
     readonly groupId: string,
     readonly userId: string,
