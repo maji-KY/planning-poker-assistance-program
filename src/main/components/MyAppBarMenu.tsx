@@ -197,7 +197,7 @@ const styles: StyleRulesCallback<string> = theme => ({
   },
   "appBar": {
     "position": "absolute",
-    "zIndex": theme.zIndex.navDrawer + 1,
+    "zIndex": theme.zIndex.drawer + 1,
     "transition": theme.transitions.create(["width", "margin"], {
       "easing": theme.transitions.easing.sharp,
       "duration": theme.transitions.duration.leavingScreen
