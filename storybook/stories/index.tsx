@@ -16,9 +16,9 @@ import "./board";
 
 const orgs = [new Organization("id1", "name1")];
 const groups = [
-  new Group("id1", "id1", "group1", "", false),
-  new Group("id2", "id1", "group2", "", false),
-  new Group("id2", "id1", "group3", "", false)
+  new Group("id1", "id1", "group1", "", false, false),
+  new Group("id2", "id1", "group2", "", false, false),
+  new Group("id2", "id1", "group3", "", false, false)
 ];
 const user = new User("userId", "user1", "");
 const anyObj: any = {};

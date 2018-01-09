@@ -80,9 +80,9 @@ ReactDOM.render(
         <ConnectedRouter history={history}>
           <Switch>
             <Route exact path="/" component={Top} />
-            <Route exact path="/organization" component={Organization} />
+            <Route exact path="/organizations" component={Organization} />
             <Route exact path="/organization/:organizationId" component={OrganizationDetail} />
-            <Route exact path="/group" component={Group} />
+            <Route exact path="/groups" component={Group} />
             <Route exact path="/account" component={Account} />
             <Route exact path="/settings" component={Settings} />
           </Switch>

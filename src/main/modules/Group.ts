@@ -102,7 +102,7 @@ const loadEpic: Epic<Action<any>, any>
         .then((collection) => {
           const result = collection.docs.map(doc => {
             const data = doc.data();
-            return new Group(doc.id, action.payload, data.name, data.topic, data.allReady);
+            return new Group(doc.id, action.payload, data.name, data.topic, data.allReady, data.antiOpportunism);
           });
           return loadDone({"params": action.payload, result});
         })

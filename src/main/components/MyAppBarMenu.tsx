@@ -148,13 +148,13 @@ function AppMenu() {
   return (
     <div>
       <List>
-        <ListItem button component="a" href="#/organization">
+        <ListItem button component="a" href="#/organizations">
           <ListItemIcon>
             <DomainIcon />
           </ListItemIcon>
           <ListItemText primary="Organization" />
         </ListItem>
-        <ListItem button component="a" href="#/group">
+        <ListItem button component="a" href="#/groups">
           <ListItemIcon>
             <GroupIcon />
           </ListItemIcon>

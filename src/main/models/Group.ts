@@ -7,6 +7,7 @@ export default class Group extends Copyable<Group> {
     readonly name: string,
     readonly topic: string,
     readonly allReady: boolean,
+    readonly antiOpportunism: boolean,
   ) {
     super();
   }

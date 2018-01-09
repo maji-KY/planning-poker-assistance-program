@@ -12,7 +12,7 @@ import BoardTopicForm from "components/board/BoardTopicForm";
 import Group from "models/Group";
 import User from "models/User";
 
-const group = new Group("id1", "id1", "group1", "topic1", false);
+const group = new Group("id1", "id1", "group1", "topic1", false, false);
 const players = [
   new Player(
     new User("userId1", "user1", "https://raw.githubusercontent.com/wiki/maji-KY/planning-poker-assistance-program/images/planning-poker-assistance-program.jpg"),

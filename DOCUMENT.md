@@ -22,13 +22,13 @@
 - name: string
 - topic: string
 - allReady: boolean
+- antiOpportunism: boolean
 
 #### GroupUsers
-/groups/{**groupId**}/user/{**userId**}
+/groups/{**groupId**}/users/{**userId**}
+- userId: string
 - rightToTalk: boolean
-
-#### Trump
-/groups/{**groupId**}/trump/{**userId**}
+- ready: boolean
 - trump: string
 
 ### Data Relations
