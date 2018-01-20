@@ -57,7 +57,9 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const anyWindow: any = window;
 
-const store = createStore(reducer, undefined, compose(
+const composeEnhancers = isDev && anyWindow["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] || compose;
+
+const store = createStore(reducer, undefined, composeEnhancers(
   applyMiddleware(
     ...isDev ? [...middleware, createLogger()] : middleware
   ),

@@ -5,7 +5,7 @@ import { action } from "@storybook/addon-actions";
 import { object, boolean } from "@storybook/addon-knobs";
 import { combineReducers, createStore } from "redux";
 import { Provider } from "react-redux";
-import { reduxForm, reducer as formReducer  } from "redux-form";
+import { reduxForm, reducer as formReducer } from "redux-form";
 
 import { Board, Player } from "components/board/Board";
 import BoardTopicForm from "components/board/BoardTopicForm";
@@ -57,5 +57,5 @@ storiesOf("Board", module)
     })(BoardTopicForm);
     return (
       <Component />
-    )
+    );
   });

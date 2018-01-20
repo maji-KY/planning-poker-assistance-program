@@ -70,9 +70,9 @@ const logoutEpic: Epic<Action<{}>, any>
     .mergeMap(() => {
       if (firebase.auth) {
         return firebase.auth().signOut();
-      } else {
-        return Promise.reject("firebase.auth not found");
       }
+      return Promise.reject("firebase.auth not found");
+
     })
     .map(() => push("/"));
 

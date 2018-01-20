@@ -9,8 +9,8 @@ import Tooltip from "material-ui/Tooltip";
 import Table, { TableBody, TableCell, TableHead, TableRow } from "material-ui/Table";
 import Slide from "material-ui/transitions/Slide";
 import Dialog, { DialogContent, DialogTitle } from "material-ui/Dialog";
-import { FormControlLabel, FormGroup } from 'material-ui/Form';
-import Switch from 'material-ui/Switch';
+import { FormControlLabel, FormGroup } from "material-ui/Form";
+import Switch from "material-ui/Switch";
 import Avatar from "material-ui/Avatar";
 import Chip from "material-ui/Chip";
 import ChatIcon from "material-ui-icons/Chat";
@@ -47,6 +47,10 @@ export interface DispatchProps {
   onSettingDialogClose: any;
   changeShowOwnTrump: Function;
   changeAntiOpportunism: Function;
+}
+
+function Transition(props: any) {
+  return <Slide direction="up" {...props} />;
 }
 
 function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
@@ -87,33 +91,32 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
         </Table>
       </Paper>
       <div className={classes.bottomButtons}>
-        { joined ?
-          <Tooltip title="Board Settings" placement="bottom">
-              <span>
-                <Button onClick={onSettingDialogOpen} className={classes.bottomButton} fab color="default" aria-label="Board Settings">
-                  <SettingsIcon/>
-                </Button>
-              </span>
+        { joined
+          ? <Tooltip title="Board Settings" placement="bottom">
+            <span>
+              <Button onClick={onSettingDialogOpen} className={classes.bottomButton} fab color="default" aria-label="Board Settings">
+                <SettingsIcon/>
+              </Button>
+            </span>
           </Tooltip>
-          :
-          <Tooltip title="Join Group" placement="bottom">
-              <span>
-                <Button onClick={() => join()} className={classes.bottomButton} fab color="primary" aria-label="Join Group">
-                  <ChatIcon/>
-                </Button>
-              </span>
+          : <Tooltip title="Join Group" placement="bottom">
+            <span>
+              <Button onClick={() => join()} className={classes.bottomButton} fab color="primary" aria-label="Join Group">
+                <ChatIcon/>
+              </Button>
+            </span>
           </Tooltip>
         }
         {
-          joined && !group.allReady && ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "REST"].map(x => (
-            <Tooltip title={x} placement="bottom">
-            <span>
-              <Button onClick={() => stand(x)} className={classes.bottomButton} fab color="primary" aria-label={x}>
-                {x}
-              </Button>
-            </span>
+          joined && !group.allReady && ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "REST"].map(x =>
+            <Tooltip key={x} title={x} placement="bottom">
+              <span>
+                <Button onClick={() => stand(x)} className={classes.bottomButton} fab color="primary" aria-label={x}>
+                  {x}
+                </Button>
+              </span>
             </Tooltip>
-          ))
+          )
         }
       </div>
       <Dialog
@@ -151,10 +154,6 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
       </Dialog>
     </div>
   );
-}
-
-function Transition(props: any) {
-  return <Slide direction="up" {...props} />;
 }
 
 const styles: StyleRulesCallback<string> = theme => ({
