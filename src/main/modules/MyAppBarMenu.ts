@@ -15,6 +15,8 @@ const actionCreator = actionCreatorFactory("APP_BAR");
 
 export const transition = actionCreator<string>("TRANSITION");
 
+export const appInitializeDone = actionCreator<{}>("APP_INITIALIZE_DONE");
+
 export const userMenuOpen = actionCreator<HTMLElement>("USER_MENU_OPEN");
 export const userMenuClose = actionCreator<string>("USER_MENU_CLOSE");
 export const drawerOpen = actionCreator<HTMLElement>("DRAWER_OPEN");
@@ -30,6 +32,7 @@ const initialState = {
   "userMenuAnchor": null,
   "title": "PPAP(Planning-Poker-Assistance-Program)",
   "drawerOpened": false,
+  "appInitialized": false,
   "errors": new Array<Error>()
 };
 
@@ -63,6 +66,10 @@ export function myAppBarMenuReducer(state = initialState, action: Action<any>) {
     case disposeError.type:
       return Object.assign({}, state, {
         "errors": state.errors.filter((e) => e.time !== action.payload)
+      });
+    case appInitializeDone.type:
+      return Object.assign({}, state, {
+        "appInitialized": true
       });
     default:
       return state;

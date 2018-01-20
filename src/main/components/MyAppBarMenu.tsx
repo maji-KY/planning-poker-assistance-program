@@ -24,6 +24,7 @@ import GroupIcon from "material-ui-icons/Group";
 import PersonIcon from "material-ui-icons/Person";
 import SettingsIcon from "material-ui-icons/Settings";
 
+import LoadingCircle from "components/parts/LoadingCircle";
 import User from "models/User";
 
 export class Error extends Copyable<Error> {
@@ -36,6 +37,7 @@ export interface StateProps {
   children: any;
   title: string;
   auth: boolean;
+  appInitialized: boolean;
   loginUser?: User;
   userMenuOpened: boolean;
   userMenuAnchor: HTMLElement;
@@ -55,7 +57,7 @@ export interface DispatchProps {
 
 function MyAppBarMenuComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
-  const { children, title, auth, login, drawerOpened, errors } = props;
+  const { children, title, auth, appInitialized, login, drawerOpened, errors } = props;
   const { drawerOpen, drawerClose, closeError } = props;
   return (
     <div className={classes.root}>
@@ -73,9 +75,9 @@ function MyAppBarMenuComponent(props: StateProps & DispatchProps & WithStyles) {
             <Typography type="title" color="inherit" noWrap className={classes.title}>
               {title}
             </Typography>
-            { auth
-              ? <LoginMenu {...props} />
-              : <Button color="contrast" onClick={() => login()}>Login with Google&nbsp;<InputIcon /></Button>
+            { auth ? <LoginMenu {...props} />
+              : appInitialized ? <Button color="contrast" onClick={() => login()}>Login with Google&nbsp;<InputIcon /></Button>
+                : ""
             }
           </Toolbar>
         </AppBar>
@@ -96,7 +98,7 @@ function MyAppBarMenuComponent(props: StateProps & DispatchProps & WithStyles) {
             <AppMenu />
           </div>
         </Drawer>
-        <main className={classes.content}>{children}</main>
+        <main className={classes.content}>{appInitialized ? children : <LoadingCircle />}</main>
         {errors.map((error) =>
           <Snackbar
             key={error.time}

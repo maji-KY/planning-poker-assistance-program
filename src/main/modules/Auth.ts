@@ -59,9 +59,6 @@ const loginEpic: Epic<Action<{}>, any>
           return loginFailed({"params": {}, "error": e.message});
         });
     });
-const loginDoneEpic: Epic<Action<{}>, any>
-  = (action$) => action$.ofAction(loginDone)
-    .map((action) => push("/account"));
 const loginFailedEpic: Epic<Action<string>, any>
   = (action$) => action$.ofAction(loginFailed)
     .map((action) => pushError(action.payload.error));
@@ -76,4 +73,4 @@ const logoutEpic: Epic<Action<{}>, any>
     })
     .map(() => push("/"));
 
-export const epic = combineEpics(loginEpic, loginDoneEpic, loginFailedEpic, logoutEpic);
+export const epic = combineEpics(loginEpic, loginFailedEpic, logoutEpic);

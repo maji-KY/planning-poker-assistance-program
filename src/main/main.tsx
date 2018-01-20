@@ -75,6 +75,11 @@ const theme = createMuiTheme({
   }
 });
 
+const currentHash = window.location.hash;
+if (currentHash !== "#/") {
+  store.dispatch(push("/"));
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>
@@ -95,13 +100,22 @@ ReactDOM.render(
   containerElement
 );
 
-if (window.location.hash !== "#/") {
-  store.dispatch(push("/"));
-}
 
 axios.get("/__/firebase/init.json")
   .then(function (response) {
-    firebase.initializeApp(response.data);
+    const fbApp = firebase.initializeApp(response.data);
+    if (fbApp.auth) {
+      const unSubscribe = fbApp.auth().onAuthStateChanged((user) => {
+        if (user) {
+          store.dispatch(AuthModule.loginDone({"params": {}, "result": user}));
+          if (currentHash !== "#/") {
+            store.dispatch(push(currentHash.substring(1)));
+          }
+        }
+        store.dispatch(MyAppBarMenuModule.appInitializeDone({}));
+        unSubscribe();
+      });
+    }
   })
   .catch(function (error) {
     console.log(error);
