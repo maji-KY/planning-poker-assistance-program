@@ -40,17 +40,17 @@ storiesOf("Board", module)
     return (
       <Board
         group={object("group", group)}
+        loading={boolean("loading", false)}
         players={object("user", players)}
         joined={boolean("joined", false)}
         settingDialogOpened={boolean("settingDialogOpened", false)}
         showOwnTrump={boolean("showOwnTrump", false)}
-        antiOpportunism={boolean("antiOpportunism", false)}
         join={action("join")}
         kick={action("kick")}
         stand={action("stand")}
         clearCards={action("clearCards")}
-        onSettingDialogOpen={action("onSettingDialogOpen")}
-        onSettingDialogClose={action("onSettingDialogClose")}
+        settingDialogOpen={action("onSettingDialogOpen")}
+        settingDialogClose={action("onSettingDialogClose")}
         changeShowOwnTrump={action("changeShowOwnTrump")}
         changeAntiOpportunism={action("changeAntiOpportunism")}
       >

@@ -17,6 +17,7 @@ import ChatIcon from "material-ui-icons/Chat";
 import SettingsIcon from "material-ui-icons/Settings";
 import ClearIcon from "material-ui-icons/Clear";
 
+import LoadingCircle from "components/parts/LoadingCircle";
 import GroupModel from "models/Group";
 
 export interface Player {
@@ -29,12 +30,12 @@ export interface Player {
 }
 
 interface StateProps {
+  loading: boolean;
   group: GroupModel;
   players: Player[];
   joined: boolean;
   settingDialogOpened: boolean;
   showOwnTrump: boolean;
-  antiOpportunism: boolean;
   children?: any;
 }
 
@@ -43,8 +44,8 @@ export interface DispatchProps {
   kick: Function;
   stand: Function;
   clearCards: Function;
-  onSettingDialogOpen: any;
-  onSettingDialogClose: any;
+  settingDialogOpen: any;
+  settingDialogClose: any;
   changeShowOwnTrump: Function;
   changeAntiOpportunism: Function;
 }
@@ -55,8 +56,9 @@ function Transition(props: any) {
 
 function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
-  const { players, group, joined, settingDialogOpened, showOwnTrump, antiOpportunism } = props;
-  const { join, kick, stand, clearCards, onSettingDialogOpen, onSettingDialogClose, changeShowOwnTrump, changeAntiOpportunism } = props;
+  console.log(props);
+  const { loading, players, group, joined, settingDialogOpened, showOwnTrump } = props;
+  const { join, kick, stand, clearCards, settingDialogOpen, settingDialogClose, changeShowOwnTrump, changeAntiOpportunism } = props;
   return (
     <div>
       <Typography type="title" className={classes.title}>Group: {group.name}</Typography>
@@ -71,7 +73,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {players.map(player => {
+            {loading ? <TableRow><TableCell><LoadingCircle /></TableCell></TableRow> : players.map(player => {
               return (
                 <TableRow key={player.userId} className={classNames(player.rightToTalk && classes.rightToTalk)}>
                   <TableCell>
@@ -91,10 +93,10 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
         </Table>
       </Paper>
       <div className={classes.bottomButtons}>
-        { joined
+        { loading ? "" : joined
           ? <Tooltip title="Board Settings" placement="bottom">
             <span>
-              <Button onClick={onSettingDialogOpen} className={classes.bottomButton} fab color="default" aria-label="Board Settings">
+              <Button onClick={settingDialogOpen} className={classes.bottomButton} fab color="default" aria-label="Board Settings">
                 <SettingsIcon/>
               </Button>
             </span>
@@ -108,7 +110,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
           </Tooltip>
         }
         {
-          joined && !group.allReady && ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "REST"].map(x =>
+          !loading && joined && !group.allReady && ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "REST"].map(x =>
             <Tooltip key={x} title={x} placement="bottom">
               <span>
                 <Button onClick={() => stand(x)} className={classes.bottomButton} fab color="primary" aria-label={x}>
@@ -122,7 +124,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
       <Dialog
         maxWidth="xs"
         open={settingDialogOpened}
-        onClose={onSettingDialogClose}
+        onClose={settingDialogClose}
         transition={Transition}
       >
         <DialogTitle>Board Settings</DialogTitle>
@@ -140,7 +142,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
             <FormControlLabel
               control={
                 <Switch
-                  checked={antiOpportunism}
+                  checked={group.antiOpportunism}
                   onChange={(event, checked) => changeAntiOpportunism(checked)}
                 />
               }

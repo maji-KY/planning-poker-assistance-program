@@ -13,7 +13,7 @@ function handleSubmit(value: any, dispatch: Dispatch<{}>, { "group": { organizat
 }
 
 function mapStateToProps({ boardReducer }: any): any {
-  return {"group": boardReducer.group};
+  return {"group": boardReducer.group, "loading": boardReducer.loading};
 }
 
 function mapDispatchToProps(dispatch: Dispatch<{}>): any {

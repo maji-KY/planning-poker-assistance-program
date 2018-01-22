@@ -7,6 +7,7 @@ import { Observable } from "rxjs/Rx";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/merge";
+import "rxjs/add/operator/distinctUntilKeyChanged";
 import "utils/fsa-redux-observable";
 
 import { getFirestore } from "utils/Firebase";
@@ -191,7 +192,7 @@ const subscribeEpic: Epic<Action<any>, any>
             const { rightToTalk, ready, trump } = doc.data();
             return new GroupUser(groupId, doc.id, rightToTalk, ready, trump);
           });
-          groupUsers.length > currentUserCount
+          groupUsers.length !== currentUserCount
             ? observer.next(load({organizationId, groupId})) : observer.next(updateGroupUsers(groupUsers));
         },
         observer.error,
@@ -231,7 +232,7 @@ const changeAntiOpportunismEpic: Epic<Action<any>, any>
       const { "id": groupId, organizationId } = getBoardState(store).group;
       const groupRef = fs.collection("organizations").doc(organizationId).collection("groups").doc(groupId);
       return groupRef.update({"antiOpportunism": action.payload})
-        .then(() => clearCardsDone({}))
+        .then(() => nop({}))
         .catch(e => {
           console.error(e);
           return pushError(e.message);
@@ -252,6 +253,7 @@ const changeTopicEpic: Epic<Action<any>, any>
     });
 const standEpic: Epic<Action<any>, any>
   = (action$, store) => action$.ofAction(stand)
+    .distinctUntilKeyChanged("payload")
     .mergeMap((action) => {
       const fs = getFirestore();
       const { "id": groupId } = getBoardState(store).group;
