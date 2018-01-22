@@ -106,7 +106,7 @@ const loadEpic: Epic<Action<any>, any>
           });
           return loadDone({"params": action.payload, result});
         })
-        .catch((e: any) => loadFailed(e.message));
+        .catch((e: any) => loadFailed({"params": action.payload, "error": e.message}));
     });
 const loadFailedEpic: Epic<Action<string>, any>
   = (action$) => action$.ofAction(loadFailed)
@@ -119,7 +119,7 @@ const createEpic: Epic<Action<any>, any>
         "organizationId": organization.id,
         "groupName": name
       }).then(() => createDone({"params": action.payload, "result": user}))
-        .catch((e: any) => createFailed(e.message));
+        .catch((e: any) => createFailed({"params": action.payload, "error": e.message}));
     });
 const createDoneEpic: Epic<any, any>
   = (action$) => {

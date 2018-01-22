@@ -48,6 +48,7 @@ storiesOf("OrganizationDetailCntr", module)
         createDialogOpen={action("createDialogOpen")}
         createDialogClose={action("createDialogClose")}
         load={action("load")}
+        transition={action("transition")}
         match={object("match", {"params": {"organizationId": "id1"}, "isExact": false, "path": "", "url": ""})}
         location={anyObj}
         history={anyObj}

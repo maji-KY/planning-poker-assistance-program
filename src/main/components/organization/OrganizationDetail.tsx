@@ -28,12 +28,13 @@ export interface DispatchProps {
   createDialogOpen: Function;
   createDialogClose: Function;
   load: Function;
+  transition: Function;
 }
 
 function OrganizationDetailComponent(props: StateProps & DispatchProps & WithStyles & RouteComponentProps<any>) {
   const { classes } = props;
   const { organizations, groups, loading } = props;
-  const { createDialogOpen, load } = props;
+  const { createDialogOpen, load, transition } = props;
   const { "match": { "params": { organizationId } } } = props;
   const currentOrganization = organizations.find(x => x.id === organizationId);
   return (
@@ -43,7 +44,7 @@ function OrganizationDetailComponent(props: StateProps & DispatchProps & WithSty
         <List className={classes.list} subheader={<ListSubheader className={classes.stickey}>Groups</ListSubheader>}>
           {loading ? <CircularProgress className={classes.loadingCircle} /> : groups
             .map((x: GroupModel, i: number) =>
-              <ListItem key={i} button>
+              <ListItem key={i} button onClick={() => transition(`/organization/${x.organizationId}/group/${x.id}`)}>
                 <ListItemText primary={x.name} />
               </ListItem>
             )}

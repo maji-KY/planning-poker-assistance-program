@@ -18,14 +18,14 @@ import SettingsIcon from "material-ui-icons/Settings";
 import ClearIcon from "material-ui-icons/Clear";
 
 import GroupModel from "models/Group";
-import User from "models/User";
 
-export class Player {
-  constructor(
-    readonly user: User,
-    readonly rightToTalk: boolean,
-    readonly card?: string
-  ) {}
+export interface Player {
+  userId: string;
+  userName: string;
+  iconUrl: string;
+  rightToTalk: boolean;
+  ready: boolean;
+  trump: string;
 }
 
 interface StateProps {
@@ -73,16 +73,16 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
           <TableBody>
             {players.map(player => {
               return (
-                <TableRow key={player.user.id} className={classNames(player.rightToTalk && classes.rightToTalk)}>
+                <TableRow key={player.userId} className={classNames(player.rightToTalk && classes.rightToTalk)}>
                   <TableCell>
                     <Chip
-                      avatar={<Avatar src={player.user.iconUrl}/>}
-                      label={player.user.name}
-                      onDelete={() => kick(player.user.id)}
+                      avatar={<Avatar src={player.iconUrl}/>}
+                      label={player.userName}
+                      onDelete={() => kick(player.userId)}
                     />
                   </TableCell>
                   <TableCell className={classes.card} >
-                    {player.card || ""}
+                    {player.trump || ""}
                   </TableCell>
                 </TableRow>
               );

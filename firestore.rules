@@ -1,16 +1,23 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{allChildren=**} {
-       allow read: if request.auth.uid != null;
-    }
     match /users/{userId} {
       allow write: if request.auth.uid == userId;
+      allow read: if request.auth.uid != null;
     }
     match /organizations/{organizationId} {
-      allow write: if organizationId in get(/UserOrganizations/$(request.auth.uid)).data.organizationIds;
+      allow write: if organizationId in get(/databases/$(database)/documents/UserOrganizations/$(request.auth.uid)).data.organizationIds;
+      allow read: if request.auth.uid != null;
+      match /groups/{groupId} {
+        allow read, write: if organizationId in get(/databases/$(database)/documents/UserOrganizations/$(request.auth.uid)).data.organizationIds;
+      }
     }
     match /UserOrganizations/{userId} {
       allow read, write: if request.auth.uid == userId;
+    }
+    match /groups/{groupId}/users/{userId} {
+      allow create, update: if request.auth.uid == userId;
+      allow delete: if request.auth.uid != null;
+      allow read: if request.auth.uid != null;
     }
   }
 }

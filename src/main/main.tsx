@@ -21,6 +21,8 @@ import MyAppBarMenu from "containers/MyAppBarMenuCntr";
 import Top from "containers/TopCntr";
 import Organization from "containers/organization/OrganizationCntr";
 import OrganizationDetail from "containers/organization/OrganizationDetailCntr";
+import Board from "containers/board/BoardCntr";
+import BoardTopicForm from "containers/board/BoardTopicFormCntr";
 import Group from "containers/group/GroupCntr";
 import Account from "containers/AccountCntr";
 import Settings from "containers/SettingsCntr";
@@ -30,6 +32,7 @@ import * as MyAppBarMenuModule from "modules/MyAppBarMenu";
 import * as UserModule from "modules/User";
 import * as OrganizationModule from "modules/Organization";
 import * as GroupModule from "modules/Group";
+import * as BoardModule from "modules/Board";
 
 const history = createHashHistory();
 const epicMiddleware = createEpicMiddleware(
@@ -39,6 +42,7 @@ const epicMiddleware = createEpicMiddleware(
     UserModule.epic,
     OrganizationModule.epic,
     GroupModule.epic,
+    BoardModule.epic,
   )
 );
 
@@ -48,7 +52,8 @@ const reducer = combineReducers({
   "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer,
   "userReducer": UserModule.userReducer,
   "organizationReducer": OrganizationModule.organizationReducer,
-  "groupReducer": GroupModule.groupReducer
+  "groupReducer": GroupModule.groupReducer,
+  "boardReducer": BoardModule.boardReducer
 });
 
 const middleware = [routerMiddleware(history), epicMiddleware];
@@ -89,6 +94,9 @@ ReactDOM.render(
             <Route exact path="/" component={Top} />
             <Route exact path="/organizations" component={Organization} />
             <Route exact path="/organization/:organizationId" component={OrganizationDetail} />
+            <Route exact path="/organization/:organizationId/group/:groupId" component={function InjectedBoard() {
+              return <Board><BoardTopicForm /></Board>;
+            }} />
             <Route exact path="/groups" component={Group} />
             <Route exact path="/account" component={Account} />
             <Route exact path="/settings" component={Settings} />

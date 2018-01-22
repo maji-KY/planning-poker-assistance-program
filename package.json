@@ -81,6 +81,7 @@
     "redux-form": "^7.2.1",
     "redux-logger": "^3.0.6",
     "redux-observable": "^0.17.0",
+    "reselect": "^3.0.1",
     "rxjs": "^5.5.6",
     "typescript-fsa-reducers": "^0.4.5"
   },

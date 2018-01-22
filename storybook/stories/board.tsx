@@ -7,20 +7,28 @@ import { combineReducers, createStore } from "redux";
 import { Provider } from "react-redux";
 import { reduxForm, reducer as formReducer } from "redux-form";
 
-import { Board, Player } from "components/board/Board";
+import { Board } from "components/board/Board";
 import BoardTopicForm from "components/board/BoardTopicForm";
 import Group from "models/Group";
-import User from "models/User";
+import Player from "models/Player";
 
 const group = new Group("id1", "id1", "group1", "topic1", false, false);
 const players = [
   new Player(
-    new User("userId1", "user1", "https://raw.githubusercontent.com/wiki/maji-KY/planning-poker-assistance-program/images/planning-poker-assistance-program.jpg"),
-    false
+    "userId1",
+    "user1",
+    "https://raw.githubusercontent.com/wiki/maji-KY/planning-poker-assistance-program/images/planning-poker-assistance-program.jpg",
+    false,
+    false,
+    ""
   ),
   new Player(
-    new User("userId2", "user2", "https://raw.githubusercontent.com/wiki/maji-KY/planning-poker-assistance-program/images/planning-poker-assistance-program.jpg"),
-    false
+    "userId2",
+    "user2",
+    "https://raw.githubusercontent.com/wiki/maji-KY/planning-poker-assistance-program/images/planning-poker-assistance-program.jpg",
+    false,
+    false,
+    ""
   )
 ];
 

@@ -118,13 +118,13 @@ const refreshEpic: Epic<Action<any>, any>
   };
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
-    .mergeMap(() => {
+    .mergeMap((action) => {
       const fs = getFirestore();
       return fs.collection("organizations").get()
         .then((collection) => {
-          return loadDone({"params": {}, "result": collection.docs.map(doc => new Organization(doc.id, doc.data().name))});
+          return loadDone({"params": action.payload, "result": collection.docs.map(doc => new Organization(doc.id, doc.data().name))});
         })
-        .catch((e: any) => loadFailed(e.message));
+        .catch((e: any) => loadFailed({"params": action.payload, "error": e.message}));
     });
 const loadFailedEpic: Epic<Action<string>, any>
   = (action$) => action$.ofAction(loadFailed)
@@ -139,7 +139,7 @@ const loadJoinedEpic: Epic<Action<any>, any>
           const result: string[] = doc.exists ? doc.data().organizationIds : [];
           return loadJoinedDone({"params": action.payload, result});
         })
-        .catch((e: any) => loadJoinedFailed(e.message));
+        .catch((e: any) => loadJoinedFailed({"params": action.payload, "error": e.message}));
     });
 const loadJoinedFailedEpic: Epic<Action<string>, any>
   = (action$) => action$.ofAction(loadJoinedFailed)
@@ -151,7 +151,7 @@ const createEpic: Epic<Action<any>, any>
       return post("createOrganization", {
         "organizationName": name
       }).then(() => createDone({"params": action.payload, "result": user}))
-        .catch((e: any) => createFailed(e.message));
+        .catch((e: any) => createFailed({"params": action.payload, "error": e.message}));
     });
 const createDoneEpic: Epic<any, any>
   = (action$) => {
