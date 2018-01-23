@@ -10,6 +10,10 @@ service cloud.firestore {
       match /groups/{groupId} {
         allow read, write: if organizationId in get(/databases/$(database)/documents/UserOrganizations/$(request.auth.uid)).data.organizationIds;
       }
+      match /admissions/{userId} {
+        allow read: if request.auth.uid == userId || organizationId in get(/databases/$(database)/documents/UserOrganizations/$(request.auth.uid)).data.organizationIds;
+        allow write: if request.auth.uid == userId;
+      }
     }
     match /UserOrganizations/{userId} {
       allow read, write: if request.auth.uid == userId;

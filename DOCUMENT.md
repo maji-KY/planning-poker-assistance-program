@@ -17,6 +17,9 @@
 /UserOrganizations/{**userId**}
 - organizationIds: string[]
 
+#### OrganizationAdmissions
+/organizations/{**organizationId**}/admissions/{**userId**}
+
 #### Groups
 /organizations/{**organizationId**}/groups/{**groupId**}
 - name: string
