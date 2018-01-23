@@ -17,8 +17,8 @@
 /UserOrganizations/{**userId**}
 - organizationIds: string[]
 
-#### OrganizationAdmissions
-/organizations/{**organizationId**}/admissions/{**userId**}
+#### OrganizationJoinRequest
+/organizations/{**organizationId**}/joinRequest/{**userId**}
 
 #### Groups
 /organizations/{**organizationId**}/groups/{**groupId**}
