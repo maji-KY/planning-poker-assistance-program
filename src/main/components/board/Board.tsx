@@ -110,7 +110,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
           </Tooltip>
         }
         {
-          !loading && joined && !group.allReady && ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "REST"].map(x =>
+          !loading && joined && !group.allReady && ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "BREAK"].map(x =>
             <Tooltip key={x} title={x} placement="bottom">
               <span>
                 <Button onClick={() => stand(x)} className={classes.bottomButton} fab color="primary" aria-label={x}>
