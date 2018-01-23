@@ -21,6 +21,7 @@ import MyAppBarMenu from "containers/MyAppBarMenuCntr";
 import Top from "containers/TopCntr";
 import Organization from "containers/organization/OrganizationCntr";
 import OrganizationDetail from "containers/organization/OrganizationDetailCntr";
+import OrganizationJoinRequest from "containers/organization/OrganizationJoinRequestCntr";
 import Board from "containers/board/BoardCntr";
 import BoardTopicForm from "containers/board/BoardTopicFormCntr";
 import Group from "containers/group/GroupCntr";
@@ -31,6 +32,7 @@ import * as AuthModule from "modules/Auth";
 import * as MyAppBarMenuModule from "modules/MyAppBarMenu";
 import * as UserModule from "modules/User";
 import * as OrganizationModule from "modules/Organization";
+import * as OrganizationJoinRequestModule from "modules/OrganizationJoinRequest";
 import * as GroupModule from "modules/Group";
 import * as BoardModule from "modules/Board";
 
@@ -41,6 +43,7 @@ const epicMiddleware = createEpicMiddleware(
     MyAppBarMenuModule.epic,
     UserModule.epic,
     OrganizationModule.epic,
+    OrganizationJoinRequestModule.epic,
     GroupModule.epic,
     BoardModule.epic,
   )
@@ -52,6 +55,7 @@ const reducer = combineReducers({
   "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer,
   "userReducer": UserModule.userReducer,
   "organizationReducer": OrganizationModule.organizationReducer,
+  "organizationJoinRequestReducer": OrganizationJoinRequestModule.organizationJoinRequestReducer,
   "groupReducer": GroupModule.groupReducer,
   "boardReducer": BoardModule.boardReducer
 });
@@ -94,6 +98,7 @@ ReactDOM.render(
             <Route exact path="/" component={Top} />
             <Route exact path="/organizations" component={Organization} />
             <Route exact path="/organization/:organizationId" component={OrganizationDetail} />
+            <Route exact path="/organization/:organizationId/joinRequests" component={OrganizationJoinRequest} />
             <Route exact path="/organization/:organizationId/group/:groupId" component={function InjectedBoard() {
               return <Board><BoardTopicForm /></Board>;
             }} />

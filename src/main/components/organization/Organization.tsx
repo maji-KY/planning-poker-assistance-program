@@ -4,13 +4,16 @@ import { withStyles, WithStyles, StyleRulesCallback } from "material-ui/styles";
 import Paper from "material-ui/Paper";
 import Typography from "material-ui/Typography";
 import ListSubheader from "material-ui/List/ListSubheader";
-import List, { ListItem, ListItemText } from "material-ui/List";
+import List, { ListItem, ListItemText, ListItemSecondaryAction } from "material-ui/List";
 import Divider from "material-ui/Divider";
 import Button from "material-ui/Button";
+import IconButton from "material-ui/IconButton";
 import Tooltip from "material-ui/Tooltip";
 import { CircularProgress } from "material-ui/Progress";
 import AddIcon from "material-ui-icons/Add";
 import RefreshIcon from "material-ui-icons/Refresh";
+import AssignmentIcon from "material-ui-icons/Assignment";
+import SendIcon from "material-ui-icons/Send";
 
 import CreateOrganizationForm from "containers/organization/CreateOrganizationFormCntr";
 import OrganizationModel from "models/Organization";
@@ -29,12 +32,13 @@ export interface DispatchProps {
   createDialogClose: Function;
   refresh: Function;
   transition: Function;
+  requestJoin: Function;
 }
 
 function OrganizationComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
   const { organizations, joinedOrganizationIds, loading, loadingJoined, user } = props;
-  const { createDialogOpen, transition, refresh } = props;
+  const { createDialogOpen, transition, refresh, requestJoin } = props;
   return (
     <div>
       <Typography type="title" className={classes.title}>Organization</Typography>
@@ -51,10 +55,27 @@ function OrganizationComponent(props: StateProps & DispatchProps & WithStyles) {
         <Divider />
         <List className={classes.list} subheader={<ListSubheader className={classes.stickey}>All Organizations</ListSubheader>}>
           {loading ? <CircularProgress className={classes.loadingCircle} /> : organizations.map((x: OrganizationModel, i: number) =>
-            <ListItem key={i} button onClick={() => transition(`/organization/${x.id}`)}>
+            <ListItem key={i} button>
               <ListItemText primary={x.name} />
-            </ListItem>
-          )}
+              <ListItemSecondaryAction>
+                { joinedOrganizationIds.find((id: string) => id === x.id)
+                  ? <Tooltip title="Manage Join Requests" placement="top" className={classes.actionButton}>
+                    <IconButton onClick={() => transition(`/organization/${x.id}/joinRequests`)} aria-label="Manage Join Requests">
+                      <AssignmentIcon />
+                    </IconButton>
+                  </Tooltip>
+                  : <Tooltip title="Send Join Requests" placement="top" className={classes.actionButton}>
+                    <IconButton onClick={() => {
+                      requestJoin({"target": x, user});
+                      refresh(user);
+                    }} aria-label="Send Join Requests">
+                      <SendIcon />
+                    </IconButton>
+                  </Tooltip>
+                }
+              </ListItemSecondaryAction>
+            </ListItem>)
+          }
         </List>
       </Paper>
       <div className={classes.bottomButtons}>
@@ -99,6 +120,9 @@ const styles: StyleRulesCallback<string> = theme => ({
   },
   "bottomButton": {
     "margin": theme.spacing.unit * 3
+  },
+  "actionButton": {
+    "margin": "0 10px"
   },
   "loadingCircle": {
     "margin": theme.spacing.unit * 2
