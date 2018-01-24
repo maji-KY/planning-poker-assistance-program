@@ -10,6 +10,6 @@ export default function authFilter(req: Request, res: Response, cb: (userId: str
       reason => res.status(401).send(reason)
     ).catch(reason => res.status(500).send(reason));
   } else {
-    res.status(401).send("authorization required");
+    res.status(401).send("authentication required");
   }
 }
