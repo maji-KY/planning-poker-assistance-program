@@ -27,6 +27,8 @@ export interface Player {
   rightToTalk: boolean;
   ready: boolean;
   trump: string;
+  isMe: boolean;
+  isStopper: boolean;
 }
 
 interface StateProps {
@@ -56,7 +58,6 @@ function Transition(props: any) {
 
 function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
-  console.log(props);
   const { loading, players, group, joined, settingDialogOpened, showOwnTrump } = props;
   const { join, kick, stand, clearCards, settingDialogOpen, settingDialogClose, changeShowOwnTrump, changeAntiOpportunism } = props;
   return (
@@ -75,7 +76,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
           <TableBody>
             {loading ? <TableRow><TableCell><LoadingCircle /></TableCell></TableRow> : players.map(player => {
               return (
-                <TableRow key={player.userId} className={classNames(player.rightToTalk && classes.rightToTalk)}>
+                <TableRow key={player.userId} className={classNames((player.rightToTalk || player.isStopper) && classes.rightToTalk)}>
                   <TableCell>
                     <Chip
                       avatar={<Avatar src={player.iconUrl}/>}
@@ -84,7 +85,13 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
                     />
                   </TableCell>
                   <TableCell className={classes.card} >
-                    {player.trump || ""}
+                    {
+                      group.allReady || player.isStopper
+                        ? player.trump : player.ready
+                          ? player.isMe && showOwnTrump
+                            ? player.trump : "ready..."
+                          : ""
+                    }
                   </TableCell>
                 </TableRow>
               );

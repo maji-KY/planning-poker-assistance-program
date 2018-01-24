@@ -1,13 +1,22 @@
 import { createSelector } from "reselect";
-import { loginUser } from "utils/Apps";
 import Player from "models/Player";
+import User from "models/User";
 
 const getPlayers = (state) => state.boardReducer.players;
+const getLoginUser = (state) => state.userReducer.loginUser;
 
 export const makeUserBoardJoined = () => createSelector(
-  [ getPlayers ],
-  (players: Player[]) => {
-    const user = loginUser();
-    return !!(user && players.find(x => x.userId === user.uid));
+  [ getPlayers, getLoginUser ],
+  (players: Player[], loginUser: User) => {
+    return !!players.find(x => x.userId === loginUser.id);
   }
+);
+
+export const makeViewPlayers = () => createSelector(
+  [ getPlayers, getLoginUser ],
+  (players: Player[], loginUser: User) =>
+    players.map(x => ({...x,
+      "isMe": x.userId === loginUser.id,
+      "isStopper": x.trump === "BIG" || x.trump === "?" || x.trump === "BREAK"
+    }))
 );

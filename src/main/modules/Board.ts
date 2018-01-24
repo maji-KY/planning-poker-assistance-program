@@ -261,7 +261,8 @@ const standEpic: Epic<Action<any>, any>
       const userId = user && user.uid || "";
 
       return fs.collection("groups").doc(groupId).collection("users").doc(userId).update({
-        "trump": action.payload
+        "trump": action.payload,
+        "ready": true
       }).then(() => nop({}))
         .catch(e => {
           console.error(e);
