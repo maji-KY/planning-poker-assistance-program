@@ -92,6 +92,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
           </TableBody>
         </Table>
       </Paper>
+      <div className={classes.bottomSpace} />
       <div className={classes.bottomButtons}>
         { loading ? "" : joined
           ? <Tooltip title="Board Settings" placement="bottom">
@@ -110,15 +111,23 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
           </Tooltip>
         }
         {
-          !loading && joined && !group.allReady && ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "BREAK"].map(x =>
-            <Tooltip key={x} title={x} placement="bottom">
+          !loading && joined && (group.allReady
+            ? <Tooltip title="Clear All Cards" placement="bottom">
               <span>
-                <Button onClick={() => stand(x)} className={classes.bottomButton} fab color="primary" aria-label={x}>
-                  {x}
+                <Button onClick={() => clearCards()} className={classes.betButton} fab color="contrast" aria-label="clear all cards">
+                  CLR
                 </Button>
               </span>
             </Tooltip>
-          )
+            : ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "BREAK"].map(x =>
+              <Tooltip key={x} title={x} placement="bottom">
+                <span>
+                  <Button onClick={() => stand(x)} className={classes.betButton} fab color="primary" aria-label={x}>
+                    {x}
+                  </Button>
+                </span>
+              </Tooltip>
+            ))
         }
       </div>
       <Dialog
@@ -149,8 +158,8 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
               label="anti-opportunism mode"
             />
           </FormGroup>
-          <Button onClick={() => clearCards()} color="default" raised aria-label="Clear Cards">
-            <ClearIcon/>Clear Cards
+          <Button onClick={() => clearCards()} color="default" raised aria-label="Clear All Cards">
+            <ClearIcon/>Clear All Cards
           </Button>
         </DialogContent>
       </Dialog>
@@ -193,6 +202,14 @@ const styles: StyleRulesCallback<string> = theme => ({
   },
   "bottomButton": {
     "margin": theme.spacing.unit * 3
+  },
+  "betButton": {
+    "margin": theme.spacing.unit * 0.5,
+    "width": 90,
+    "height": 90
+  },
+  "bottomSpace": {
+    "height": 110
   },
   "loadingCircle": {
     "margin": theme.spacing.unit * 2
