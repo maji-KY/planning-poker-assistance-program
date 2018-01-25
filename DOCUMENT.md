@@ -28,7 +28,7 @@
 - antiOpportunism: boolean
 
 #### GroupUsers
-/groups/{**groupId**}/users/{**userId**}
+/organizations/{**organizationId**}/groups/{**groupId**}/users/{**userId**}
 - userId: string
 - rightToTalk: boolean
 - ready: boolean

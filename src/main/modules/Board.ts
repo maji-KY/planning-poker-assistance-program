@@ -13,11 +13,11 @@ import "utils/fsa-redux-observable";
 import { getFirestore } from "utils/Firebase";
 
 import User from "models/User";
+import Organization from "models/Organization";
 import Group from "models/Group";
 import GroupUser from "models/GroupUser";
 import Player from "models/Player";
 import { pushError } from "modules/MyAppBarMenu";
-// import { post } from "utils/CloudFunctions";
 import { locationChangeOf } from "utils/LocationChanges";
 import { loginUser } from "utils/Apps";
 
@@ -36,6 +36,7 @@ interface LoadParams {
 }
 
 interface LoadResult {
+  organization: Organization;
   group: Group;
   players: Player[];
 }
@@ -67,6 +68,7 @@ const nop = actionCreator<{}>("NOP");
 
 // reducer
 interface State {
+  organization: Organization;
   group: Group;
   loading: boolean;
   players: Player[];
@@ -76,6 +78,7 @@ interface State {
 }
 
 const initialState = {
+  "organization": new Organization("", ""),
   "group": new Group("", "", "", "", false, false),
   "loading": true,
   "players": [],
@@ -92,6 +95,7 @@ export const boardReducer = reducerWithInitialState<State>(initialState)
   .case(load, (state, payload) => ({...state, "loading": true}))
   .case(loadDone, (state, { result }) => ({
     ...state,
+    "organization": result.organization,
     "group": result.group,
     "players": result.players,
     "loading": false
@@ -129,10 +133,15 @@ const loadEpic: Epic<Action<any>, any>
       const fs = getFirestore();
       const { organizationId, groupId } = action.payload;
       try {
-        const groupSS = await fs.collection("organizations").doc(organizationId).collection("groups").doc(groupId).get();
+        const orgSS = await fs.collection("organizations").doc(organizationId).get();
+        const organization = new Organization(orgSS.id, orgSS.data().name);
+
+        const groupSS = await fs.collection("organizations").doc(organizationId)
+          .collection("groups").doc(groupId).get();
         const { name, topic, allReady, antiOpportunism } = groupSS.data();
         const group = new Group(groupSS.id, organizationId, name, topic, allReady, antiOpportunism);
-        const groupUsersSS = await fs.collection("groups").doc(groupId).collection("users").get();
+        const groupUsersSS = await fs.collection("organizations").doc(organizationId)
+          .collection("groups").doc(groupId).collection("users").get();
         const groupUsers = groupUsersSS.docs.map(doc => {
           const { rightToTalk, ready, trump } = doc.data();
           return new GroupUser(groupId, doc.id, rightToTalk, ready, trump);
@@ -154,7 +163,7 @@ const loadEpic: Epic<Action<any>, any>
           }
           throw new Error(`GroupUser not found: userId=${x.id}`);
         });
-        return loadDone({"params": action.payload, "result": {group, players}});
+        return loadDone({"params": action.payload, "result": {organization, group, players}});
       } catch (e) {
         console.error(e);
         return loadFailed({"params": action.payload, "error": e.message});
@@ -173,31 +182,33 @@ const subscribeEpic: Epic<Action<any>, any>
       const unsubscribers: Function[] = [];
 
       const groupFlow = Observable.create((observer) => {
-        const unsubscribeGroup = fs.collection("organizations").doc(organizationId).collection("groups").doc(groupId).onSnapshot((nextGroup) => {
-          const { name, topic, allReady, antiOpportunism } = nextGroup.data();
-          const group = new Group(nextGroup.id, organizationId, name, topic, allReady, antiOpportunism);
-          observer.next(updateGroup(group));
-        },
-        observer.error,
-        observer.complete
-        );
+        const unsubscribeGroup = fs.collection("organizations").doc(organizationId)
+          .collection("groups").doc(groupId).onSnapshot((nextGroup) => {
+            const { name, topic, allReady, antiOpportunism } = nextGroup.data();
+            const group = new Group(nextGroup.id, organizationId, name, topic, allReady, antiOpportunism);
+            observer.next(updateGroup(group));
+          },
+          observer.error,
+          observer.complete
+          );
         unsubscribers.push(unsubscribeGroup);
         return unsubscribeGroup;
       });
 
       const groupUsersFlow = Observable.create((observer) => {
         const currentUserCount = getBoardState(store).players.length;
-        const unsubscribeGroupUsers = fs.collection("groups").doc(groupId).collection("users").onSnapshot((nextGroupUsers) => {
-          const groupUsers = nextGroupUsers.docs.map(doc => {
-            const { rightToTalk, ready, trump } = doc.data();
-            return new GroupUser(groupId, doc.id, rightToTalk, ready, trump);
-          });
-          groupUsers.length !== currentUserCount
-            ? observer.next(load({organizationId, groupId})) : observer.next(updateGroupUsers(groupUsers));
-        },
-        observer.error,
-        observer.complete
-        );
+        const unsubscribeGroupUsers = fs.collection("organizations").doc(organizationId)
+          .collection("groups").doc(groupId).collection("users").onSnapshot((nextGroupUsers) => {
+            const groupUsers = nextGroupUsers.docs.map(doc => {
+              const { rightToTalk, ready, trump } = doc.data();
+              return new GroupUser(groupId, doc.id, rightToTalk, ready, trump);
+            });
+            groupUsers.length !== currentUserCount
+              ? observer.next(load({organizationId, groupId})) : observer.next(updateGroupUsers(groupUsers));
+          },
+          observer.error,
+          observer.complete
+          );
         unsubscribers.push(unsubscribeGroupUsers);
         return unsubscribeGroupUsers;
       });
@@ -213,9 +224,10 @@ const clearCardsEpic: Epic<Action<any>, any>
   = (action$, store) => action$.ofAction(clearCards)
     .mergeMap(async (action) => {
       const fs = getFirestore();
-      const { "id": groupId } = getBoardState(store).group;
+      const { "organization": { "id": organizationId }, "group": { "id": groupId } } = getBoardState(store);
       try {
-        const groupUsersSS = await fs.collection("groups").doc(groupId).collection("users").get();
+        const groupUsersSS = await fs.collection("organizations").doc(organizationId)
+          .collection("groups").doc(groupId).collection("users").get();
         await groupUsersSS.docs
           .reduce((batch, doc) => batch.update(doc.ref, {"rightToTalk": false, "ready": false, "trump": ""}), fs.batch())
           .commit();
@@ -256,14 +268,15 @@ const standEpic: Epic<Action<any>, any>
     .distinctUntilKeyChanged("payload")
     .mergeMap((action) => {
       const fs = getFirestore();
-      const { "id": groupId } = getBoardState(store).group;
+      const { "organization": { "id": organizationId }, "group": { "id": groupId } } = getBoardState(store);
       const user = loginUser();
       const userId = user && user.uid || "";
 
-      return fs.collection("groups").doc(groupId).collection("users").doc(userId).update({
-        "trump": action.payload,
-        "ready": true
-      }).then(() => nop({}))
+      return fs.collection("organizations").doc(organizationId)
+        .collection("groups").doc(groupId).collection("users").doc(userId).update({
+          "trump": action.payload,
+          "ready": true
+        }).then(() => nop({}))
         .catch(e => {
           console.error(e);
           return pushError(e.message);
@@ -273,18 +286,17 @@ const joinEpic: Epic<Action<any>, any>
   = (action$, store) => action$.ofAction(join)
     .mergeMap((action) => {
       const fs = getFirestore();
-      const groupId = getBoardState(store).group.id;
+      const { "organization": { "id": organizationId }, "group": { "id": groupId } } = getBoardState(store);
       const user = loginUser();
-      console.log("user");
-      console.log(user);
       const userId = user && user.uid || "";
 
-      return fs.collection("groups").doc(groupId).collection("users").doc(userId).set({
-        userId,
-        "rightToTalk": false,
-        "ready": false,
-        "trump": ""
-      }).then(() => nop({}))
+      return fs.collection("organizations").doc(organizationId)
+        .collection("groups").doc(groupId).collection("users").doc(userId).set({
+          userId,
+          "rightToTalk": false,
+          "ready": false,
+          "trump": ""
+        }).then(() => nop({}))
         .catch(e => {
           console.error(e);
           return pushError(e.message);
@@ -294,10 +306,11 @@ const kickEpic: Epic<Action<any>, any>
   = (action$, store) => action$.ofAction(kick)
     .mergeMap((action) => {
       const fs = getFirestore();
-      const { "id": groupId } = getBoardState(store).group;
+      const { "organization": { "id": organizationId }, "group": { "id": groupId } } = getBoardState(store);
       const userId = action.payload;
 
-      return fs.collection("groups").doc(groupId).collection("users").doc(userId).delete()
+      return fs.collection("organizations").doc(organizationId)
+        .collection("groups").doc(groupId).collection("users").doc(userId).delete()
         .then(() => nop({}))
         .catch(e => {
           console.error(e);
