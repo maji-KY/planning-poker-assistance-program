@@ -119,7 +119,7 @@ function LoginMenu(props: StateProps & DispatchProps) {
   return (
     <div>
       <IconButton
-        aria-owns={userMenuOpened ? "menu-appbar" : null}
+        aria-owns={userMenuOpened ? "menu-appbar" : undefined}
         aria-haspopup="true"
         onClick={(e: any) => userMenuOpen(e.currentTarget)}
         color="contrast"
