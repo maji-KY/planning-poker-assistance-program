@@ -7,4 +7,5 @@ option && admin.initializeApp(option);
 
 export * from "organization";
 export * from "group";
+export * from "board";
 

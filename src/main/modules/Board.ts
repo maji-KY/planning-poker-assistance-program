@@ -231,6 +231,10 @@ const clearCardsEpic: Epic<Action<any>, any>
         await groupUsersSS.docs
           .reduce((batch, doc) => batch.update(doc.ref, {"rightToTalk": false, "ready": false, "trump": ""}), fs.batch())
           .commit();
+        await fs.collection("organizations").doc(organizationId)
+          .collection("groups").doc(groupId).update({
+            "allReady": false
+          });
         return clearCardsDone({});
       } catch (e) {
         console.error(e);

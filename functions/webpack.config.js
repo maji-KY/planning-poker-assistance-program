@@ -22,6 +22,7 @@ const config = {
     "extensions": [".tsx", ".ts", ".js"],
     "modules": [
       path.join(__dirname, "src/main"),
+      path.join(__dirname, "../src/main"),
       "node_modules"
     ]
   },

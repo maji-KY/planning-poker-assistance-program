@@ -86,9 +86,11 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
                   </TableCell>
                   <TableCell className={classes.card} >
                     {
-                      group.allReady || player.isStopper
-                        ? player.trump : player.ready
-                          ? player.isMe && showOwnTrump
+                      group.allReady
+                        ? group.antiOpportunism && !player.rightToTalk
+                          ? "ready..." : player.trump
+                        : player.ready
+                          ? player.isMe && showOwnTrump || player.isStopper
                             ? player.trump : "ready..."
                           : ""
                     }

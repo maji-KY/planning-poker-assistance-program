@@ -3,7 +3,7 @@
     "strictNullChecks": true,
     "noUnusedLocals" : true,
     "noImplicitThis": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitReturns": true,
     "alwaysStrict": true,
     "noUnusedParameters": false,
