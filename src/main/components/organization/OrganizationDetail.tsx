@@ -50,6 +50,7 @@ function OrganizationDetailComponent(props: StateProps & DispatchProps & WithSty
             )}
         </List>
       </Paper>
+      <div className={classes.bottomSpace}/>
       <div className={classes.bottomButtons}>
         <Tooltip title="Create New Groups" placement="bottom">
           <span>
@@ -95,6 +96,9 @@ const styles: StyleRulesCallback<string> = theme => ({
   },
   "loadingCircle": {
     "margin": theme.spacing.unit * 2
+  },
+  "bottomSpace": {
+    "height": 110
   }
 });
 

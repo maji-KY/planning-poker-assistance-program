@@ -78,6 +78,7 @@ function OrganizationComponent(props: StateProps & DispatchProps & WithStyles) {
           }
         </List>
       </Paper>
+      <div className={classes.bottomSpace}/>
       <div className={classes.bottomButtons}>
         <Tooltip title="Create New Organization" placement="bottom">
           <span>
@@ -126,6 +127,9 @@ const styles: StyleRulesCallback<string> = theme => ({
   },
   "loadingCircle": {
     "margin": theme.spacing.unit * 2
+  },
+  "bottomSpace": {
+    "height": 110
   }
 });
 
