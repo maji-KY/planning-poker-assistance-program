@@ -1,0 +1,43 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts,.tsx src/main src/test webpack.config.js karma.conf.js",
+    "test": "karma start karma.conf.js",
+    "test-watch": "karma start karma.conf.js --no-single-run",
+    "build-dev": "NODE_ENV=develop webpack",
+    "build": "NODE_ENV=production webpack",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase experimental:functions:shell",
+    "start": "yarn shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.3",
+    "@types/jasmine": "^2.8.5",
+    "@types/node": "^8.5.9",
+    "eslint": "^4.16.0",
+    "eslint-plugin-react": "^7.5.1",
+    "file-loader": "^1.1.6",
+    "firebase-tools": "^3.17.3",
+    "jasmine-core": "^2.9.1",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-webpack": "^2.0.9",
+    "ts-loader": "^3.3.1",
+    "typescript": "^2.6.2",
+    "typescript-eslint-parser": "^12.0.0",
+    "uglifyjs-webpack-plugin": "^1.1.6",
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "firebase-admin": "^5.8.1",
+    "firebase-functions": "^0.8.1"
+  },
+  "private": true
+}

@@ -1,0 +1,48 @@
+sudo: required
+
+services:
+  - docker
+
+cache:
+  directories:
+    - $HOME/.cache/yarn
+
+before_install:
+  - docker pull majiky/node8-chrome
+  - docker run -td -v $TRAVIS_BUILD_DIR:/ci -v $HOME/.cache/yarn:/home/root/.cache/yarn -w /ci --name ci majiky/node8-chrome
+  - docker ps
+
+before_script:
+  - docker exec ci yarn --pure-lockfile --non-interactive
+  - docker exec ci bash -c "cd functions && yarn --pure-lockfile --non-interactive"
+
+script:
+  - docker exec ci yarn test
+  - docker exec ci bash -c "cd functions && yarn test"
+
+before_deploy:
+  - docker exec ci yarn build
+  - docker exec ci bash -c "cd functions && yarn build"
+  - |
+    if [ "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ]; then
+      echo "production deploy"
+      docker exec ci yarn deploy --token $FIREBASE_TOKEN --project $PRODUCTION_PROJECT_NAME
+    else
+      echo "develop deploy"
+      docker exec ci yarn deploy --token $FIREBASE_TOKEN --project $DEVELOP_PROJECT_NAME
+    fi
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script:
+      - echo "done."
+    on:
+      branch: develop
+  - provider: script
+    skip_cleanup: true
+    script:
+      - echo "done."
+    on:
+      tags: true
+      all_branches: true
