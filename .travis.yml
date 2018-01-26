@@ -13,16 +13,15 @@ before_install:
   - docker ps
 
 before_script:
-  - docker exec ci yarn --pure-lockfile --non-interactive
+#  - docker exec ci yarn --pure-lockfile --non-interactive
   - docker exec ci bash -c "cd functions && yarn --pure-lockfile --non-interactive"
 
 script:
-  - docker exec ci yarn test
+#  - docker exec ci yarn test
   - docker exec ci bash -c "cd functions && yarn test"
 
 before_deploy:
-  - docker exec ci yarn build
-  - docker exec ci bash -c "cd functions && yarn build"
+  - ls -l
 
 deploy:
   - provider: script
@@ -32,6 +31,12 @@ deploy:
       - docker exec ci yarn deploy --token $FIREBASE_TOKEN --project $DEVELOP_PROJECT_NAME
     on:
       branch: develop
+  - provider: script
+    skip_cleanup: true
+    script:
+      - ls -l
+    on:
+      branch: test
   - provider: script
     skip_cleanup: true
     script:
