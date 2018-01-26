@@ -19,3 +19,24 @@ before_script:
 script:
   - docker exec ci yarn test
   - docker exec ci bash -c "cd functions && yarn test"
+
+before_deploy:
+  - docker exec ci yarn build
+  - docker exec ci bash -c "cd functions && yarn build"
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script:
+      - docker exec ci yarn firebase use $DEVELOP_PROJECT_NAME --token $FIREBASE_TOKEN
+      - docker exec ci yarn deploy --token $FIREBASE_TOKEN
+    on:
+      branch: develop
+  - provider: script
+    skip_cleanup: true
+    script:
+      - docker exec ci yarn firebase use $PRODUCTION_PROJECT_NAME --token $FIREBASE_TOKEN
+      - docker exec ci yarn deploy --token $FIREBASE_TOKEN
+    on:
+      tags: true
+      all_branches: true
