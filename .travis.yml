@@ -22,6 +22,7 @@ script:
 
 before_deploy:
   - ls -l
+  - docker ps
 
 deploy:
   - provider: script
@@ -35,6 +36,7 @@ deploy:
     skip_cleanup: true
     script:
       - ls -l
+      - docker ps
     on:
       branch: test
   - provider: script
