@@ -23,7 +23,8 @@ script:
 before_deploy:
   - ls -l
   - docker ps
-  - | if [ $TRAVIS_BRANCH = $TRAVIS_TAG ]; then
+  - |
+    if [ $TRAVIS_BRANCH = $TRAVIS_TAG ]; then
       echo "たぐ"
     else
       echo "develop"
