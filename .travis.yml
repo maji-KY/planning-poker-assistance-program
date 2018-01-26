@@ -28,15 +28,14 @@ deploy:
   - provider: script
     skip_cleanup: true
     script:
-      - docker exec ci yarn firebase use $DEVELOP_PROJECT_NAME --token $FIREBASE_TOKEN
-      - docker exec ci yarn deploy --token $FIREBASE_TOKEN
+      - ls -l
+      - docker exec ci yarn deploy --token $FIREBASE_TOKEN --project $DEVELOP_PROJECT_NAME
     on:
       branch: develop
   - provider: script
     skip_cleanup: true
     script:
-      - docker exec ci yarn firebase use $PRODUCTION_PROJECT_NAME --token $FIREBASE_TOKEN
-      - docker exec ci yarn deploy --token $FIREBASE_TOKEN
+      - docker exec ci yarn deploy --token $FIREBASE_TOKEN --project $PRODUCTION_PROJECT_NAME
     on:
       tags: true
       all_branches: true
