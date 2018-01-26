@@ -24,7 +24,7 @@ before_deploy:
   - ls -l
   - docker ps
   - |
-    if [ $TRAVIS_BRANCH = $TRAVIS_TAG ]; then
+    if [ "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ]; then
       echo "たぐ"
     else
       echo "develop"
@@ -38,12 +38,6 @@ deploy:
       - docker exec ci yarn deploy --token $FIREBASE_TOKEN --project $DEVELOP_PROJECT_NAME
     on:
       branch: develop
-  - provider: script
-    skip_cleanup: true
-    script:
-      - echo "done"
-    on:
-      branch: test
   - provider: script
     skip_cleanup: true
     script:
