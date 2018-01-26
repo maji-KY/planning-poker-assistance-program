@@ -12,6 +12,7 @@
     "build-dev": "NODE_ENV=develop webpack --progress",
     "build-dev:watch": "NODE_ENV=develop webpack --progress --watch",
     "build": "NODE_ENV=production webpack",
+    "deploy": "firebase deploy",
     "storybook": "start-storybook -p 6006"
   },
   "repository": {
@@ -44,10 +45,10 @@
     "clean-webpack-plugin": "^0.1.17",
     "css-loader": "^0.28.9",
     "eslint": "^4.16.0",
-    "eslint-plugin-react": "^7.5.1",
+    "eslint-plugin-react": "^7.6.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
-    "firebase-tools": "^3.17.3",
+    "firebase-tools": "^3.17.4",
     "html-webpack-plugin": "^2.30.1",
     "jasmine-core": "^2.9.1",
     "karma": "^1.7.1",
@@ -86,7 +87,6 @@
     "typescript-fsa-reducers": "^0.4.5"
   },
   "resolutions": {
-    "firebase": "4.9.0",
     "core-js": "2.5.3",
     "uglify-js": "3.3.8"
   }
