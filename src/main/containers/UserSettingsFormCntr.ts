@@ -1,7 +1,7 @@
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { reduxForm, InjectedFormProps, getFormValues } from "redux-form";
-import UserSettingsForm, { asyncValidate, StateProps } from "components/UserSettingsForm";
+import UserSettingsForm, { StateProps } from "components/UserSettingsForm";
 import { modUser } from "modules/User";
 
 function handleSubmit(value: any, dispatch: Dispatch<{}>, props: InjectedFormProps & StateProps) {
@@ -32,8 +32,7 @@ function mapStateToProps(state: any): any {
 const UserSettingsFormCntr = connect(mapStateToProps, null)(
   reduxForm({
     "form": "UserSettingsForm",
-    "onSubmit": handleSubmit,
-    asyncValidate
+    "onSubmit": handleSubmit
   })(UserSettingsForm)
 );
 
