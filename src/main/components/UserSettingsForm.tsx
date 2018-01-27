@@ -1,4 +1,3 @@
-import axios from "axios";
 import * as React from "react";
 import { InjectedFormProps } from "redux-form";
 
@@ -15,10 +14,6 @@ const required = (value: any) => value ? undefined : "required";
 const notNbsp = (value: any) => value && value.trim && value.trim() !== "" ? undefined : "required";
 const urlReg = /^https?:\/\/.+$/;
 const isValidUrl = (value: any) => value.match(urlReg) ? undefined : "not a valid URL";
-export const asyncValidate = (values: any) => axios
-  .get(values.iconUrl)
-  .then(() => {})
-  .catch(() => {throw {"iconUrl": "cannot access the URL"}});
 
 export interface StateProps {
   currentIconUrl?: string;
