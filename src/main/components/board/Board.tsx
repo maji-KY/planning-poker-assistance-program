@@ -27,7 +27,6 @@ export interface Player {
   rightToTalk: boolean;
   ready: boolean;
   trump: string;
-  isMe: boolean;
   isStopper: boolean;
 }
 
@@ -85,15 +84,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
                     />
                   </TableCell>
                   <TableCell className={classes.card} >
-                    {
-                      group.allReady
-                        ? group.antiOpportunism && !player.rightToTalk
-                          ? "ready..." : player.trump
-                        : player.ready
-                          ? player.isMe && showOwnTrump || player.isStopper
-                            ? player.trump : "ready..."
-                          : ""
-                    }
+                    {player.trump}
                   </TableCell>
                 </TableRow>
               );
