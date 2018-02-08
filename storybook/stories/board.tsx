@@ -48,6 +48,7 @@ storiesOf("Board", module)
         joined={boolean("joined", false)}
         settingDialogOpened={boolean("settingDialogOpened", false)}
         showOwnTrump={boolean("showOwnTrump", false)}
+        standing={boolean("standing", false)}
         join={action("join")}
         kick={action("kick")}
         stand={action("stand")}
