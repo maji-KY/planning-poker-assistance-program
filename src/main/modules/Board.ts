@@ -7,7 +7,7 @@ import { Observable } from "rxjs/Rx";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/merge";
-import "rxjs/add/operator/distinctUntilKeyChanged";
+import "rxjs/add/operator/delay";
 import "utils/fsa-redux-observable";
 
 import { getFirestore } from "utils/Firebase";
@@ -54,6 +54,7 @@ const updateUsers = actionCreator<User[]>("UPDATE_USERS");
 export const changeShowOwnTrump = actionCreator<boolean>("CHANGE_SHOW_OWN_TRUMP");
 export const changeAntiOpportunism = actionCreator<boolean>("CHANGE_ANTI_OPPORTUNISM");
 export const stand = actionCreator<string>("STAND");
+export const allowNextStand = actionCreator<{}>("ALLOW_NEXT_STAND");
 export const clearCards = actionCreator<{}>("CLEAR_CARDS");
 export const clearCardsDone = actionCreator<{}>("CLEAR_CARDS_DONE");
 
@@ -75,6 +76,7 @@ interface State {
   unsubscriber?: Function;
   showOwnTrump: boolean;
   settingDialogOpened: boolean;
+  standing: boolean;
 }
 
 const initialState = {
@@ -84,7 +86,8 @@ const initialState = {
   "players": [],
   "unsubscriber": undefined,
   "showOwnTrump": true,
-  "settingDialogOpened": false
+  "settingDialogOpened": false,
+  "standing": false
 };
 
 function getBoardState(store: MiddlewareAPI<any>): State {
@@ -114,6 +117,8 @@ export const boardReducer = reducerWithInitialState<State>(initialState)
   .case(changeShowOwnTrump, (state, payload) => ({...state, "showOwnTrump": payload}))
   .case(settingDialogOpen, (state, payload) => ({...state, "settingDialogOpened": true}))
   .case(settingDialogClose, (state, payload) => ({...state, "settingDialogOpened": false}))
+  .case(stand, (state, payload) => ({...state, "standing": true}))
+  .case(allowNextStand, (state, payload) => ({...state, "standing": false}))
   .build();
 
 // epic
@@ -269,7 +274,6 @@ const changeTopicEpic: Epic<Action<any>, any>
     });
 const standEpic: Epic<Action<any>, any>
   = (action$, store) => action$.ofAction(stand)
-    .distinctUntilKeyChanged("payload")
     .mergeMap((action) => {
       const fs = getFirestore();
       const { "organization": { "id": organizationId }, "group": { "id": groupId } } = getBoardState(store);
@@ -286,6 +290,10 @@ const standEpic: Epic<Action<any>, any>
           return pushError(e.message);
         });
     });
+const avoidRepeatedStandEpic: Epic<Action<any>, any>
+  = (action$) => action$.ofAction(stand)
+    .delay(2500)
+    .map(() => allowNextStand({}));
 const joinEpic: Epic<Action<any>, any>
   = (action$, store) => action$.ofAction(join)
     .mergeMap((action) => {
@@ -331,6 +339,7 @@ export const epic = combineEpics(
   changeAntiOpportunismEpic,
   changeTopicEpic,
   standEpic,
+  avoidRepeatedStandEpic,
   joinEpic,
   kickEpic
 );

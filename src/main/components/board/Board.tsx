@@ -37,6 +37,7 @@ interface StateProps {
   joined: boolean;
   settingDialogOpened: boolean;
   showOwnTrump: boolean;
+  standing: boolean;
   children?: any;
 }
 
@@ -57,7 +58,7 @@ function Transition(props: any) {
 
 function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
-  const { loading, players, group, joined, settingDialogOpened, showOwnTrump } = props;
+  const { loading, players, group, joined, settingDialogOpened, showOwnTrump, standing } = props;
   const { join, kick, stand, clearCards, settingDialogOpen, settingDialogClose, changeShowOwnTrump, changeAntiOpportunism } = props;
   return (
     <div>
@@ -122,7 +123,7 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
             : ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "BREAK"].map(x =>
               <Tooltip key={x} title={x} placement="bottom">
                 <span>
-                  <Button onClick={() => stand(x)} className={classes.betButton} fab color="primary" aria-label={x}>
+                  <Button onClick={() => stand(x)} className={classes.betButton} fab color="primary" disabled={standing} aria-label={x}>
                     {x}
                   </Button>
                 </span>

@@ -9,10 +9,10 @@ function makeMapStateToProps(): any {
   const viewPlayers = makeViewPlayers();
   return (state: any) => {
     const { boardReducer } = state;
-    const { loading, group, settingDialogOpened, showOwnTrump } = boardReducer;
+    const { loading, group, settingDialogOpened, showOwnTrump, standing } = boardReducer;
     const joined = userBoardJoined(state);
     const players = viewPlayers(state);
-    return {loading, group, players, joined, settingDialogOpened, showOwnTrump};
+    return {loading, group, players, joined, settingDialogOpened, showOwnTrump, standing};
   };
 }
 
