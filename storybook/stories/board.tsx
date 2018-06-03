@@ -53,6 +53,7 @@ storiesOf("Board", module)
         kick={action("kick")}
         stand={action("stand")}
         clearCards={action("clearCards")}
+        dismiss={action("dismiss")}
         settingDialogOpen={action("onSettingDialogOpen")}
         settingDialogClose={action("onSettingDialogClose")}
         changeShowOwnTrump={action("changeShowOwnTrump")}
