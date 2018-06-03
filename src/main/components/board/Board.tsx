@@ -16,6 +16,7 @@ import Chip from "material-ui/Chip";
 import ChatIcon from "material-ui-icons/Chat";
 import SettingsIcon from "material-ui-icons/Settings";
 import ClearIcon from "material-ui-icons/Clear";
+import PeopleOutlineIcon from "material-ui-icons/PeopleOutline";
 
 import LoadingCircle from "components/parts/LoadingCircle";
 import GroupModel from "models/Group";
@@ -46,6 +47,7 @@ export interface DispatchProps {
   kick: Function;
   stand: Function;
   clearCards: Function;
+  dismiss: Function;
   settingDialogOpen: any;
   settingDialogClose: any;
   changeShowOwnTrump: Function;
@@ -59,7 +61,7 @@ function Transition(props: any) {
 function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
   const { classes } = props;
   const { loading, players, group, joined, settingDialogOpened, showOwnTrump, standing } = props;
-  const { join, kick, stand, clearCards, settingDialogOpen, settingDialogClose, changeShowOwnTrump, changeAntiOpportunism } = props;
+  const { join, kick, stand, clearCards, dismiss, settingDialogOpen, settingDialogClose, changeShowOwnTrump, changeAntiOpportunism } = props;
   return (
     <div>
       <Typography type="title" className={classes.title}>Group: {group.name}</Typography>
@@ -159,8 +161,11 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
               label="anti-opportunism mode"
             />
           </FormGroup>
-          <Button onClick={() => clearCards()} color="default" raised aria-label="Clear All Cards">
+          <Button className={classes.boardModButton} onClick={() => clearCards()} color="default" raised aria-label="Clear All Cards">
             <ClearIcon/>Clear All Cards
+          </Button>
+          <Button className={classes.boardModButton} onClick={() => dismiss()} color="default" raised aria-label="Dismiss">
+            <PeopleOutlineIcon/>Dismiss
           </Button>
         </DialogContent>
       </Dialog>
@@ -208,6 +213,9 @@ const styles: StyleRulesCallback<string> = theme => ({
     "margin": theme.spacing.unit * 0.5,
     "width": 90,
     "height": 90
+  },
+  "boardModButton": {
+    "margin": "10px 0"
   },
   "bottomSpace": {
     "height": 110
