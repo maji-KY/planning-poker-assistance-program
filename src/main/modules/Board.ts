@@ -57,6 +57,7 @@ export const stand = actionCreator<string>("STAND");
 export const allowNextStand = actionCreator<{}>("ALLOW_NEXT_STAND");
 export const clearCards = actionCreator<{}>("CLEAR_CARDS");
 export const clearCardsDone = actionCreator<{}>("CLEAR_CARDS_DONE");
+export const dismiss = actionCreator<{}>("DISMISS");
 
 export const settingDialogOpen = actionCreator<{}>("SETTING_DIALOG_OPEN");
 export const settingDialogClose = actionCreator<{}>("SETTING_DIALOG_CLOSE");
@@ -208,7 +209,7 @@ const subscribeEpic: Epic<Action<any>, any>
               const { rightToTalk, ready, trump } = doc.data();
               return new GroupUser(groupId, doc.id, rightToTalk, ready, trump);
             });
-            groupUsers.length !== currentUserCount
+            groupUsers.length !== currentUserCount && !nextGroupUsers.metadata.fromCache
               ? observer.next(load({organizationId, groupId})) : observer.next(updateGroupUsers(groupUsers));
           },
           observer.error,
@@ -241,6 +242,24 @@ const clearCardsEpic: Epic<Action<any>, any>
             "allReady": false
           });
         return clearCardsDone({});
+      } catch (e) {
+        console.error(e);
+        return pushError(e.message);
+      }
+    });
+const dismissEpic: Epic<Action<any>, any>
+  = (action$, store) => action$.ofAction(dismiss)
+    .mergeMap(async () => {
+      try {
+        const fs = getFirestore();
+        const { "players": players, "organization": { "id": organizationId }, "group": { "id": groupId } } = getBoardState(store);
+
+        const groupUsersRef = fs.collection("organizations").doc(organizationId)
+          .collection("groups").doc(groupId).collection("users");
+        for (const player of players) {
+          await groupUsersRef.doc(player.userId).delete();
+        }
+        return clearCards({});
       } catch (e) {
         console.error(e);
         return pushError(e.message);
@@ -336,6 +355,7 @@ export const epic = combineEpics(
   loadFailedEpic,
   subscribeEpic,
   clearCardsEpic,
+  dismissEpic,
   changeAntiOpportunismEpic,
   changeTopicEpic,
   standEpic,
