@@ -208,7 +208,7 @@ const subscribeEpic: Epic<Action<any>, any>
               const { rightToTalk, ready, trump } = doc.data();
               return new GroupUser(groupId, doc.id, rightToTalk, ready, trump);
             });
-            groupUsers.length !== currentUserCount
+            groupUsers.length !== currentUserCount && !nextGroupUsers.metadata.fromCache
               ? observer.next(load({organizationId, groupId})) : observer.next(updateGroupUsers(groupUsers));
           },
           observer.error,
