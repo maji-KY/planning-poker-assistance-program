@@ -1,8 +1,6 @@
 import * as firebase from "firebase/app";
-import "firebase/firestore";
-import { Firestore } from "firebase/firestore";
 
-export function getFirestore(): Firestore {
+export function getFirestore(): firebase.firestore.Firestore {
   if (firebase.firestore) {
     return firebase.firestore();
   }

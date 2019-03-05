@@ -4,7 +4,7 @@ import { reduxForm, InjectedFormProps, getFormValues } from "redux-form";
 import UserSettingsForm, { StateProps } from "components/UserSettingsForm";
 import { modUser } from "modules/User";
 
-function handleSubmit(value: any, dispatch: Dispatch<{}>, props: InjectedFormProps & StateProps) {
+function handleSubmit(value: any, dispatch: Dispatch<any>, props: InjectedFormProps & StateProps) {
   const actionDispatcher = bindActionCreators({
     modUser
   }, dispatch);

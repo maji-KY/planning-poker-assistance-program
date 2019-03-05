@@ -7,7 +7,7 @@ function mapStateToProps({ userReducer }: any): any {
   return Object.assign({}, userReducer);
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): any {
+function mapDispatchToProps(dispatch: Dispatch<any>): any {
   return bindActionCreators({pushError}, dispatch);
 }
 

@@ -1,5 +1,4 @@
 import { MiddlewareAPI } from "redux";
-import { LocationChangeAction } from "react-router-redux";
 import actionCreatorFactory, { Action } from "typescript-fsa";
 import { reducerWithInitialState } from "typescript-fsa-reducers";
 import { Epic, combineEpics } from "redux-observable";
@@ -126,9 +125,9 @@ export const boardReducer = reducerWithInitialState<State>(initialState)
 const groupReg = /^\/organization\/(\w+)\/group\/(\w+)$/;
 const showBoardEpic: Epic<Action<any>, any>
   = (action$) => locationChangeOf(action$, groupReg)
-    .map((action: LocationChangeAction) => load({
-      "organizationId": action.payload.pathname.replace(groupReg, "$1"),
-      "groupId": action.payload.pathname.replace(groupReg, "$2")
+    .map((action: any) => load({
+      "organizationId": action.payload.location.pathname.replace(groupReg, "$1"),
+      "groupId": action.payload.location.pathname.replace(groupReg, "$2")
     }));
 const loadEpic: Epic<Action<any>, any>
   = (action$, store) => action$.ofAction(load)
@@ -140,11 +139,13 @@ const loadEpic: Epic<Action<any>, any>
       const { organizationId, groupId } = action.payload;
       try {
         const orgSS = await fs.collection("organizations").doc(organizationId).get();
-        const organization = new Organization(orgSS.id, orgSS.data().name);
+        const orgSSdata: any = orgSS.data();
+        const organization = new Organization(orgSS.id, orgSSdata.name);
 
         const groupSS = await fs.collection("organizations").doc(organizationId)
           .collection("groups").doc(groupId).get();
-        const { name, topic, allReady, antiOpportunism } = groupSS.data();
+        const groupSSdata: any = groupSS.data();
+        const { name, topic, allReady, antiOpportunism } = groupSSdata;
         const group = new Group(groupSS.id, organizationId, name, topic, allReady, antiOpportunism);
         const groupUsersSS = await fs.collection("organizations").doc(organizationId)
           .collection("groups").doc(groupId).collection("users").get();
@@ -190,8 +191,8 @@ const subscribeEpic: Epic<Action<any>, any>
       const groupFlow = Observable.create((observer) => {
         const unsubscribeGroup = fs.collection("organizations").doc(organizationId)
           .collection("groups").doc(groupId).onSnapshot((nextGroup) => {
-            const { name, topic, allReady, antiOpportunism } = nextGroup.data();
-            const group = new Group(nextGroup.id, organizationId, name, topic, allReady, antiOpportunism);
+            const data: any = nextGroup.data();
+            const group = new Group(nextGroup.id, organizationId, data.name, data.topic, data.allReady, data.antiOpportunism);
             observer.next(updateGroup(group));
           },
           observer.error,

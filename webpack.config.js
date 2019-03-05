@@ -1,15 +1,16 @@
 const path = require("path");
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const extractSASS = new ExtractTextPlugin("bundle.css");
 
 const env = process.env.NODE_ENV;
 const distDir = "public";
 
 const config = {
+
+  "mode": env,
+
   "entry": [
     path.resolve(__dirname, "src/main/main.tsx")
   ],
@@ -35,8 +36,7 @@ const config = {
       "process.env": {
         "NODE_ENV": JSON.stringify(env)
       }
-    }),
-    extractSASS
+    })
   ],
 
   "module": {
@@ -49,10 +49,6 @@ const config = {
       {
         "test": /\.(jpg|png|mp4|ico)$/,
         "use": "file-loader?name=[name].[ext]"
-      },
-      {
-        "test": /\.scss$/,
-        "use": extractSASS.extract(["css-loader?modules", "sass-loader"])
       }
     ]
   }

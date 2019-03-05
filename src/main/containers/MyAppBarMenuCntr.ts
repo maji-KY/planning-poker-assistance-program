@@ -8,10 +8,10 @@ function mapStateToProps({ authReducer, myAppBarMenuReducer, userReducer }: any)
   return Object.assign({}, authReducer, myAppBarMenuReducer, userReducer);
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): DispatchProps {
+function mapDispatchToProps(dispatch: Dispatch<any>): DispatchProps {
   return bindActionCreators({login, logout, userMenuOpen, userMenuClose, drawerOpen, drawerClose, closeError, pushError }, dispatch);
 }
 
-const MyAppBarMenuCntr = connect(mapStateToProps, mapDispatchToProps)(MyAppBarMenu);
+const MyAppBarMenuCntr: any = connect(mapStateToProps, mapDispatchToProps)(MyAppBarMenu);
 
 export default MyAppBarMenuCntr;

@@ -5,7 +5,7 @@ import BoardTopicForm from "components/board/BoardTopicForm";
 import { changeTopic } from "modules/Board";
 
 
-function handleSubmit(value: any, dispatch: Dispatch<{}>, { "group": { organizationId, "id": groupId } }: any) {
+function handleSubmit(value: any, dispatch: Dispatch<any>, { "group": { organizationId, "id": groupId } }: any) {
   const actionDispatcher = bindActionCreators({
     changeTopic
   }, dispatch);
@@ -16,7 +16,7 @@ function mapStateToProps({ boardReducer }: any): any {
   return {"group": boardReducer.group, "loading": boardReducer.loading};
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): any {
+function mapDispatchToProps(dispatch: Dispatch<any>): any {
   return bindActionCreators({}, dispatch);
 }
 

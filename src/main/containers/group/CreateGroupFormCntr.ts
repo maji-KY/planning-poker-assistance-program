@@ -5,7 +5,7 @@ import CreateGroupForm, { StateProps, required, notNbsp, duplicate } from "compo
 import { create, createDialogClose } from "modules/Group";
 import Organization from "models/Organization";
 
-function handleSubmit(value: any, dispatch: Dispatch<{}>, props: InjectedFormProps & StateProps) {
+function handleSubmit(value: any, dispatch: Dispatch<any>, props: InjectedFormProps & StateProps) {
   const actionDispatcher = bindActionCreators({
     create
   }, dispatch);
@@ -15,7 +15,7 @@ function handleSubmit(value: any, dispatch: Dispatch<{}>, props: InjectedFormPro
   }
 }
 
-function validation(values: any, props: any): FormErrors<FormData> {
+function validation(values: any, props: any): FormErrors<any> {
   const { "name": nameValue } = values;
   const name = required(nameValue) || notNbsp(nameValue) || duplicate(nameValue, values, props) || undefined;
   return name ? {name} : {};
@@ -32,7 +32,7 @@ function mapStateToProps(state: any): any {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): any {
+function mapDispatchToProps(dispatch: Dispatch<any>): any {
   return bindActionCreators({createDialogClose}, dispatch);
 }
 
