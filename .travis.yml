@@ -13,8 +13,8 @@ before_install:
   - docker ps
 
 before_script:
-  - docker exec ci yarn --pure-lockfile --non-interactive
-  - docker exec ci bash -c "cd functions && yarn --pure-lockfile --non-interactive"
+  - docker exec ci yarn --pure-lockfile --non-interactive --ignore-engines
+  - docker exec ci bash -c "cd functions && yarn --pure-lockfile --non-interactive --ignore-engines"
 
 script:
   - docker exec ci yarn test
