@@ -1,11 +1,7 @@
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-const option = functions.config().firebase;
-
-option && admin.initializeApp(option);
+admin.initializeApp();
 
 export * from "organization";
 export * from "group";
 export * from "board";
-
