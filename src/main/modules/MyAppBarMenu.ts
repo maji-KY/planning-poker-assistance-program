@@ -6,7 +6,7 @@ import "rxjs/add/operator/delay";
 import "rxjs/add/operator/ignoreElements";
 import "utils/fsa-redux-observable";
 
-import { push } from "react-router-redux";
+import { push } from "connected-react-router";
 
 import { Error } from "components/MyAppBarMenu";
 

@@ -4,7 +4,7 @@ import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import "utils/fsa-redux-observable";
 
-import { push } from "react-router-redux";
+import { push } from "connected-react-router";
 
 import * as firebase from "firebase";
 import { User as FirebaseUser } from "@firebase/auth-types";

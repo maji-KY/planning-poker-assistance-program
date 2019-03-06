@@ -136,7 +136,8 @@ const loadJoinedEpic: Epic<Action<any>, any>
       const fs = getFirestore();
       return fs.collection("UserOrganizations").doc(uid).get()
         .then((doc) => {
-          const result: string[] = doc.exists ? doc.data().organizationIds : [];
+          const data: any = doc.data();
+          const result: string[] = doc.exists ? data.organizationIds : [];
           return loadJoinedDone({"params": action.payload, result});
         })
         .catch((e: any) => loadJoinedFailed({"params": action.payload, "error": e.message}));

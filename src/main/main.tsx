@@ -9,8 +9,8 @@ import { Provider } from "react-redux";
 import { createLogger } from "redux-logger";
 import { createEpicMiddleware, combineEpics } from "redux-observable";
 import { reducer as formReducer } from "redux-form";
-import { routerMiddleware, ConnectedRouter, push } from "react-router-redux";
-import { Route, Switch } from "react-router-dom";
+import { routerMiddleware, connectRouter, ConnectedRouter, push } from "connected-react-router";
+import { Route, Switch } from "react-router";
 import createHashHistory from "history/createHashHistory";
 
 import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
@@ -51,6 +51,7 @@ const epicMiddleware = createEpicMiddleware(
 
 const reducer = combineReducers({
   "form": formReducer,
+  "router": connectRouter(history),
   "authReducer": AuthModule.authReducer,
   "myAppBarMenuReducer": MyAppBarMenuModule.myAppBarMenuReducer,
   "userReducer": UserModule.userReducer,

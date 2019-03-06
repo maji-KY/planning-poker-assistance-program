@@ -67,7 +67,7 @@ const loginDoneEpic: Epic<Action<any>, any>
       return fs.collection("users").doc(authUser.uid).get().then(doc => {
         if (doc.exists) {
           const data = doc.data();
-          return initUserDone({"params": authUser, "result": new User(authUser.uid, data.name, data.iconUrl)});
+          return initUserDone({"params": authUser, "result": new User(authUser.uid, data && data.name, data && data.iconUrl)});
         }
         return initUser(authUser);
 

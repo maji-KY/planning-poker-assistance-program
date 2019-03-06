@@ -1,4 +1,3 @@
-import { LocationChangeAction } from "react-router-redux";
 import actionCreatorFactory, { Action } from "typescript-fsa";
 import { Epic, combineEpics } from "redux-observable";
 import "rxjs/add/operator/mergeMap";
@@ -93,7 +92,7 @@ export function groupReducer(state: State = initialState, action: Action<any>) {
 const organizationReg = /^\/organization\/(\w+)$/;
 const showGroupEpic: Epic<Action<any>, any>
   = (action$) => locationChangeOf(action$, organizationReg)
-    .map((action: LocationChangeAction) => load(action.payload.pathname.replace(organizationReg, "$1")));
+    .map((action: any) => load(action.payload.location.pathname.replace(organizationReg, "$1")));
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
     .mergeMap((action) => {
