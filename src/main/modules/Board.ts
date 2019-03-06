@@ -7,6 +7,7 @@ import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/merge";
 import "rxjs/add/operator/delay";
+import "rxjs/add/operator/ignoreElements";
 import "utils/fsa-redux-observable";
 
 import { getFirestore } from "utils/Firebase";
@@ -19,6 +20,8 @@ import Player from "models/Player";
 import { pushError } from "modules/MyAppBarMenu";
 import { locationChangeOf } from "utils/LocationChanges";
 import { loginUser } from "utils/Apps";
+
+import { makeUserBoardJoined } from "selectors";
 
 // action
 const actionCreator = actionCreatorFactory("BOARD");
@@ -349,6 +352,26 @@ const kickEpic: Epic<Action<any>, any>
           return pushError(e.message);
         });
     });
+const notifyEpic: Epic<any, any>
+  = (action$, store) => action$.ofAction(updateGroupUsers)
+    .map((action) => {
+      const joined = makeUserBoardJoined()(store.getState());
+      const { standing, group } = getBoardState(store);
+      const userCount = action.payload.length;
+      const readyUserCount = action.payload.filter(gu => gu.ready).length;
+      if (joined && readyUserCount && !standing) {
+        const title = group.topic;
+        const n = new Notification(
+          title,
+          {
+            "body": `${readyUserCount}/${userCount} users standing`,
+            "icon": "https://raw.githubusercontent.com/wiki/maji-KY/planning-poker-assistance-program/images/planning-poker-assistance-program.jpg",
+            "tag": "stand"
+          }
+        );
+        setTimeout(n.close.bind(n), 5000);
+      }
+    }).ignoreElements();
 
 export const epic = combineEpics(
   showBoardEpic,
@@ -362,5 +385,6 @@ export const epic = combineEpics(
   standEpic,
   avoidRepeatedStandEpic,
   joinEpic,
-  kickEpic
+  kickEpic,
+  notifyEpic
 );

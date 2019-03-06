@@ -123,13 +123,11 @@ function BoardComponent(props: StateProps & DispatchProps & WithStyles) {
               </span>
             </Tooltip>
             : ["1", "2", "3", "5", "8", "13", "21", "BIG", "?", "BREAK"].map(x =>
-              <Tooltip key={x} title={x} placement="bottom">
-                <span>
-                  <Button onClick={() => stand(x)} className={classes.betButton} fab color="primary" disabled={standing} aria-label={x}>
-                    {x}
-                  </Button>
-                </span>
-              </Tooltip>
+              <span key={x}>
+                <Button onClick={() => stand(x)} className={classes.betButton} fab color="primary" disabled={standing} aria-label={x}>
+                  {x}
+                </Button>
+              </span>
             ))
         }
       </div>

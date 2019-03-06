@@ -134,3 +134,5 @@ axios.get("/__/firebase/init.json")
   .catch(function (error) {
     console.log(error);
   });
+
+Notification.requestPermission().catch(e => console.log(e));
