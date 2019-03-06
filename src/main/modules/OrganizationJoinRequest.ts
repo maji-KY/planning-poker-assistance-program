@@ -72,7 +72,7 @@ export const organizationJoinRequestReducer = reducerWithInitialState<State>(ini
 const showReg = /^\/organization\/(\w+)\/joinRequests/;
 const showOrganizationJoinRequestEpic: Epic<Action<any>, any>
   = (action$) => locationChangeOf(action$, showReg)
-    .map((action: any) => load(action.payload.pathname.replace(showReg, "$1")));
+    .map((action: any) => load(action.payload.location.pathname.replace(showReg, "$1")));
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
     .mergeMap(async (action) => {

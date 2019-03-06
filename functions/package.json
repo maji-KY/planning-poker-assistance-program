@@ -1,5 +1,6 @@
 {
   "name": "functions",
+  "engines": {"node": "8"},
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "eslint --ext .js,.ts,.tsx src/main src/test webpack.config.js karma.conf.js",

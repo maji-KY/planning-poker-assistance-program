@@ -5,9 +5,8 @@ import { isStopperTrump } from "selectors";
 
 export const updateBoardByTrump = functions.firestore
   .document("/organizations/{organizationId}/groups/{groupId}/users/{userId}")
-  .onUpdate(async e => {
-    const data: any = e.after && e.after.data();
-    const { organizationId, groupId }: any = data;
+  .onUpdate(async (_, context) => {
+    const { organizationId, groupId }: any = context.params;
 
     const fs = admin.firestore();
 
