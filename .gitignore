@@ -4,4 +4,5 @@
 node_modules
 public/*
 functions/index.js
+storybook-static
 *.log

@@ -6,7 +6,7 @@ function mapStateToProps({ authReducer, myAppBarMenuReducer }: any): any {
   return Object.assign({}, authReducer, myAppBarMenuReducer);
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): any {
+function mapDispatchToProps(dispatch: Dispatch<any>): any {
   return bindActionCreators({}, dispatch);
 }
 

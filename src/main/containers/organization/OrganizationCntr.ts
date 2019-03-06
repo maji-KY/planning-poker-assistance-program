@@ -9,7 +9,7 @@ function mapStateToProps({ organizationReducer, userReducer }: any): any {
   return Object.assign({}, organizationReducer, {"user": userReducer.loginUser});
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): any {
+function mapDispatchToProps(dispatch: Dispatch<any>): any {
   return bindActionCreators({createDialogOpen, createDialogClose, transition, refresh, requestJoin}, dispatch);
 }
 

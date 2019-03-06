@@ -1,4 +1,5 @@
 const webpackConfig = require("./webpack.config.js");
+webpackConfig.output.filename = "[name].js";
 module.exports = function(config) {
   config.set({
     "mime": {

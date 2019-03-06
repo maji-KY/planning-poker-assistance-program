@@ -1,6 +1,5 @@
 import actionCreatorFactory, { Action } from "typescript-fsa";
 import { reducerWithInitialState } from "typescript-fsa-reducers";
-import { LocationChangeAction } from "react-router-redux";
 import { Epic, combineEpics } from "redux-observable";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
@@ -73,7 +72,7 @@ export const organizationJoinRequestReducer = reducerWithInitialState<State>(ini
 const showReg = /^\/organization\/(\w+)\/joinRequests/;
 const showOrganizationJoinRequestEpic: Epic<Action<any>, any>
   = (action$) => locationChangeOf(action$, showReg)
-    .map((action: LocationChangeAction) => load(action.payload.pathname.replace(showReg, "$1")));
+    .map((action: any) => load(action.payload.location.pathname.replace(showReg, "$1")));
 const loadEpic: Epic<Action<any>, any>
   = (action$) => action$.ofAction(load)
     .mergeMap(async (action) => {
@@ -81,7 +80,8 @@ const loadEpic: Epic<Action<any>, any>
       try {
         const targetOrganizationId = action.payload;
         const orgSS = await fs.collection("organizations").doc(targetOrganizationId).get();
-        const target = new Organization(orgSS.id, orgSS.data().name);
+        const orgSSdata: any = orgSS.data();
+        const target = new Organization(orgSS.id, orgSSdata.name);
         const requestSS = await fs.collection("organizations").doc(targetOrganizationId).collection("joinRequests").get();
         const requestUserIds = requestSS.docs.map(doc => doc.id);
         const groupUserIdHash = requestUserIds.reduce((acc, val) => {

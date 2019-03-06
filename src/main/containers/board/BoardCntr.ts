@@ -16,7 +16,7 @@ function makeMapStateToProps(): any {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): any {
+function mapDispatchToProps(dispatch: Dispatch<any>): any {
   return bindActionCreators({
     changeShowOwnTrump, changeAntiOpportunism, stand, clearCards, dismiss, settingDialogOpen, settingDialogClose, join, kick
   }, dispatch);

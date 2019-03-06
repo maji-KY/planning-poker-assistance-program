@@ -7,7 +7,7 @@ function mapStateToProps({ organizationJoinRequestReducer }: any): any {
   return {...organizationJoinRequestReducer};
 }
 
-function mapDispatchToProps(dispatch: Dispatch<{}>): any {
+function mapDispatchToProps(dispatch: Dispatch<any>): any {
   return bindActionCreators({accept, "refuse": cancelJoin}, dispatch);
 }
 
