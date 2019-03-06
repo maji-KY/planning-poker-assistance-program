@@ -6,7 +6,7 @@ import "utils/fsa-redux-observable";
 
 import { push } from "connected-react-router";
 
-import * as firebase from "firebase";
+import * as firebase from "firebase/app";
 import { User as FirebaseUser } from "@firebase/auth-types";
 import { pushError } from "modules/MyAppBarMenu";
 
