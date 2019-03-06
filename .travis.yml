@@ -8,8 +8,8 @@ cache:
     - $HOME/.cache/yarn
 
 before_install:
-  - docker pull majiky/node-chrome
-  - docker run -td -v $TRAVIS_BUILD_DIR:/ci -v $HOME/.cache/yarn:/home/root/.cache/yarn -w /ci --name ci majiky/node-chrome
+  - docker pull majiky/node8-chrome
+  - docker run -td -v $TRAVIS_BUILD_DIR:/ci -v $HOME/.cache/yarn:/home/root/.cache/yarn -w /ci --name ci majiky/node8-chrome
   - docker ps
 
 before_script:
