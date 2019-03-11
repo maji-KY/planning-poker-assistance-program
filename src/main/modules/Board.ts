@@ -370,6 +370,10 @@ const notifyEpic: Epic<any, any>
           }
         );
         setTimeout(n.close.bind(n), 5000);
+        n.addEventListener("click", () => {
+          window.focus();
+          n.close();
+        });
       }
     }).ignoreElements();
 
