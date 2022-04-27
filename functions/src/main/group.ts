@@ -8,14 +8,14 @@ export const createGroup = onHttpRequest(async (req: Request, res: Response, use
     const fs = admin.firestore();
     const user = await fs.collection("users").doc(userId).get();
     if (user.exists) {
-      const createdGroupId = (+new Date).toString(36);
+      const createdGroupId = (+new Date()).toString(36);
       const organizationRef = fs.collection("organizations").doc(organizationId);
       const organization = await organizationRef.get();
       if (organization.exists) {
         await organizationRef.collection("groups").doc(createdGroupId).set({
           "name": groupName,
           "topic": "New Planning",
-          "allReady": false
+          "allReady": false,
         });
         res.status(201).send("created");
       } else {

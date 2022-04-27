@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "strictNullChecks": true,
-    "noUnusedLocals" : true,
+    "noUnusedLocals": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "alwaysStrict": true,
     "noUnusedParameters": false,
     "outDir": "./public/",
+    "baseUrl": "src/main",
     "sourceMap": true,
     "skipLibCheck": true,
     "moduleResolution": "node",

@@ -6,3 +6,4 @@ public/*
 functions/index.js
 storybook-static
 *.log
+coverage

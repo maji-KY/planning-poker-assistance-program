@@ -5,17 +5,20 @@ import onHttpRequest from "onHttpRequest";
 export const createOrganization = onHttpRequest(async (req: Request, res: Response, userId: string) => {
   const { organizationName } = req.body;
   if (organizationName) {
-    const createdOrganizationId = (+new Date).toString(36);
+    const createdOrganizationId = (+new Date()).toString(36);
     const fs = admin.firestore();
     await fs.collection("organizations").doc(createdOrganizationId).set({
-      "name": organizationName
+      "name": organizationName,
     });
     const uo = await fs.collection("UserOrganizations").doc(userId).get();
     const currentData = uo.exists && uo.data();
-    const currentOrganizationIds: string[] = currentData && currentData.organizationIds || [];
-    await fs.collection("UserOrganizations").doc(userId).set({
-      "organizationIds": currentOrganizationIds.concat(createdOrganizationId)
-    });
+    const currentOrganizationIds: string[] = (currentData && currentData.organizationIds) || [];
+    await fs
+      .collection("UserOrganizations")
+      .doc(userId)
+      .set({
+        "organizationIds": currentOrganizationIds.concat(createdOrganizationId),
+      });
 
     res.status(201).send("created");
   } else {
@@ -34,10 +37,13 @@ export const acceptJoinRequest = onHttpRequest(async (req: Request, res: Respons
   } else if (target && user) {
     const uo = await fs.collection("UserOrganizations").doc(user.id).get();
     const currentData = uo.exists && uo.data();
-    const currentOrganizationIds: string[] = currentData && currentData.organizationIds || [];
-    await fs.collection("UserOrganizations").doc(user.id).set({
-      "organizationIds": currentOrganizationIds.concat(target.id)
-    });
+    const currentOrganizationIds: string[] = (currentData && currentData.organizationIds) || [];
+    await fs
+      .collection("UserOrganizations")
+      .doc(user.id)
+      .set({
+        "organizationIds": currentOrganizationIds.concat(target.id),
+      });
     await fs.collection("organizations").doc(target.id).collection("joinRequests").doc(user.id).delete();
 
     res.status(205).send("user joined");
