@@ -5,10 +5,14 @@ export default function authFilter(req: Request, res: Response, cb: (userId: str
   const authorization = req.headers.authorization;
   if (typeof authorization === "string") {
     const token = authorization.substring(7);
-    admin.auth().verifyIdToken(token).then(
-      data => cb(data.uid),
-      reason => res.status(401).send(reason)
-    ).catch(reason => res.status(500).send(reason));
+    admin
+      .auth()
+      .verifyIdToken(token)
+      .then(
+        data => cb(data.uid),
+        reason => res.status(401).send(reason),
+      )
+      .catch(reason => res.status(500).send(reason));
   } else {
     res.status(401).send("authentication required");
   }
