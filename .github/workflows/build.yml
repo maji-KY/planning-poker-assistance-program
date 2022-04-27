@@ -43,13 +43,15 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          load: true
 
       - name: Staging Deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_NAME: ${{ secrets.STAGING_PROJECT_NAME }}
+          IMAGE_ID: ${{ steps.build-image.outputs.imageid }}
         run: |
-          docker run -e FIREBASE_TOKEN -e PROJECT_NAME ${{ steps.build-image.outputs.imageid }}
+          docker run -e FIREBASE_TOKEN -e PROJECT_NAME $IMAGE_ID
 
   production_deploy:
     needs: build
@@ -69,10 +71,12 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          load: true
 
       - name: Production Deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_NAME: ${{ secrets.PRODUCTION_PROJECT_NAME }}
+          IMAGE_ID: ${{ steps.build-image.outputs.imageid }}
         run: |
-          docker run -e FIREBASE_TOKEN -e PROJECT_NAME ${{ steps.build-image.outputs.imageid }}
+          docker run -e FIREBASE_TOKEN -e PROJECT_NAME $IMAGE_ID
